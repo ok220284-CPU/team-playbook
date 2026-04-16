@@ -349,16 +349,29 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
   </div>
   <div class="card">
     <h2>データ管理</h2>
+    <p class="hint">ファイル保存が確実。コードはデータが小さい時の簡易バックアップ用</p>
+    <label>📁 ファイルで保存/復元（推奨）</label>
     <button class="btn sub" id="btn-export">JSONエクスポート</button>
     <label>JSONインポート</label>
     <input type="file" id="file-import" accept="application/json">
+    <hr>
+    <label>📝 コードで保存/復元（補助）</label>
+    <button class="btn sub" id="btn-code-out">コードで出力</button>
+    <div id="code-out-area" class="hide" style="margin-top:8px">
+      <div id="code-size-info" class="hint" style="margin-bottom:4px"></div>
+      <textarea id="code-out" readonly rows="4" style="font-size:11px;font-family:monospace"></textarea>
+      <button class="btn sub" id="btn-code-copy" style="margin-top:6px">コピー</button>
+    </div>
+    <label>コードから復元</label>
+    <textarea id="code-in" rows="3" style="font-size:11px;font-family:monospace" placeholder="バックアップコードを貼り付け"></textarea>
+    <button class="btn sub" id="btn-code-import" style="margin-top:6px">コードから復元</button>
     <hr>
     <button class="btn sub" id="btn-reset" style="background:#ffebee;color:#c62828;border-color:#ffcdd2">全データ削除</button>
   </div>
   <div class="card">
     <h2>このアプリについて</h2>
     <p class="hint">
-      プレーブック v2.4<br>
+      プレーブック v2.5<br>
       - チーム判断辞典 -<br>
       練習も試合も、失敗も成功も、チーム全員の判断を蓄積する<br>
       単一HTML・ローカル保存・PWA対応<br>
@@ -842,6 +855,50 @@ document.getElementById('btn-end-skip').onclick=()=>{
 };
 document.getElementById('btn-end-cancel').onclick=()=>{
   document.getElementById('end-modal').classList.add('hide');
+};
+
+// コード出力：10KB未満ならBase64で表示、以上なら警告
+document.getElementById('btn-code-out').onclick=()=>{
+  const json=JSON.stringify(state);
+  const b64=btoa(unescape(encodeURIComponent(json)));
+  const sizeKB=Math.round(b64.length/1024*10)/10;
+  const area=document.getElementById('code-out-area');
+  const info=document.getElementById('code-size-info');
+  const ta=document.getElementById('code-out');
+  area.classList.remove('hide');
+  if(b64.length<10240){
+    info.innerHTML='✅ サイズ: <b>'+sizeKB+'KB</b> - コピペOK';
+    info.style.color='var(--ok)';
+    ta.value=b64;
+  }else{
+    info.innerHTML='⚠️ サイズ: <b>'+sizeKB+'KB</b> - 大きすぎるためファイル保存を推奨';
+    info.style.color='var(--ng)';
+    ta.value=b64;
+    toast('コードが長すぎます。ファイル保存推奨',3000);
+  }
+};
+
+document.getElementById('btn-code-copy').onclick=()=>{
+  const ta=document.getElementById('code-out');
+  if(!ta.value){toast('先に出力してください');return;}
+  navigator.clipboard.writeText(ta.value).then(()=>toast('コピーしました'))
+    .catch(()=>{ta.select();document.execCommand('copy');toast('コピーしました');});
+};
+
+document.getElementById('btn-code-import').onclick=()=>{
+  const code=document.getElementById('code-in').value.trim();
+  if(!code){toast('コードを貼り付けてください');return;}
+  try{
+    const json=decodeURIComponent(escape(atob(code)));
+    const d=JSON.parse(json);
+    if(!d.sessions){toast('形式エラー');return;}
+    if(!confirm('現在のデータを上書きします。よろしいですか？'))return;
+    state=d;save();renderCurrent();
+    document.getElementById('code-in').value='';
+    toast('復元しました',2800);
+  }catch(err){
+    toast('復元失敗: コードが不正です',3000);
+  }
 };
 document.getElementById('file-import').onchange=(e)=>{
   const f=e.target.files[0];if(!f)return;
