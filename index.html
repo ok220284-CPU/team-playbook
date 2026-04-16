@@ -98,6 +98,11 @@ button.btn.sub{background:#fff;color:#1a1a1a;border:1.5px solid #1a1a1a}
 hr{border:none;border-top:1px solid var(--line);margin:12px 0}
 .hint{font-size:11px;color:var(--mute);margin:4px 0 0;line-height:1.5}
 .group{border-top:1px dashed var(--line);padding-top:10px;margin-top:10px}
+#ch-def-pos .chip{min-width:42px;text-align:center;padding:8px 10px}
+.pos-block{background:#faf7ff;border:1px solid var(--line);border-radius:8px;
+  padding:8px 10px;margin-top:8px}
+.pos-label{font-size:11px;font-weight:800;color:var(--accent);margin-bottom:4px}
+.pos-block .chip{padding:6px 10px;font-size:11px}
 </style>
 </head>
 <body>
@@ -250,6 +255,20 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
         <span class="chip" data-v="ゲッツー">ゲッツー</span>
         <span class="chip" data-v="進塁阻止">進塁阻止</span>
       </div>
+
+      <label>関与ポジション（複数選択可）</label>
+      <div class="chips" id="ch-def-pos">
+        <span class="chip" data-v="投">投</span>
+        <span class="chip" data-v="捕">捕</span>
+        <span class="chip" data-v="一">一</span>
+        <span class="chip" data-v="二">二</span>
+        <span class="chip" data-v="三">三</span>
+        <span class="chip" data-v="遊">遊</span>
+        <span class="chip" data-v="左">左</span>
+        <span class="chip" data-v="中">中</span>
+        <span class="chip" data-v="右">右</span>
+      </div>
+      <div id="pos-choices"></div>
     </div>
 
     <div class="group">
@@ -330,7 +349,7 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
   <div class="card">
     <h2>このアプリについて</h2>
     <p class="hint">
-      プレーブック v2.2<br>
+      プレーブック v2.3<br>
       - チーム判断辞典 -<br>
       練習も試合も、失敗も成功も、チーム全員の判断を蓄積する<br>
       単一HTML・ローカル保存・PWA対応<br>
@@ -348,7 +367,7 @@ const STORE='sb_note_v2';
 const OLD_STORE='sb_note_v1';
 const KEY='sb_gemini_key';
 let state={sessions:[],currentId:null};
-let draft={side:null,out:null,run:null,play:null,intent:null,judge:null,result:null};
+let draft={side:null,out:null,run:null,play:null,intent:null,judge:null,result:null,posAction:{}};
 
 function load(){
   try{
@@ -413,6 +432,55 @@ setupChips('ch-def-intent','intent');
 setupChips('ch-judge','judge');
 setupChips('ch-result','result');
 
+// ポジション別の選択肢定義
+const POS_CHOICES={
+  '投':['カットマン','本塁バックアップ','三塁バックアップ','一塁バックアップ','マウンド戻り','その他'],
+  '捕':['二塁送球','三塁送球','一塁送球','投手カット','本塁待機','送球なし','その他'],
+  '一':['一塁ベース入り','中継','バックアップ','送球受け','その他'],
+  '二':['二塁ベース入り','三塁送球準備','一塁送球準備','中間守備','ゲッツー連携','その他'],
+  '三':['三塁ベース入り','ランナー見張り','前進','ベースカバー','その他'],
+  '遊':['二塁ベース入り','中継カット','三塁ベースカバー','ゲッツー連携','その他'],
+  '左':['バックアップ','前進','中継','本塁送球','三塁送球','その他'],
+  '中':['バックアップ','前進','中継','本塁送球','二塁送球','その他'],
+  '右':['バックアップ','前進','中継','本塁送球','一塁送球','その他']
+};
+
+// 関与ポジションの複数選択
+document.querySelectorAll('#ch-def-pos .chip').forEach(ch=>{
+  ch.onclick=()=>{
+    const pos=ch.dataset.v;
+    ch.classList.toggle('on');
+    if(ch.classList.contains('on')){
+      if(!draft.posAction[pos])draft.posAction[pos]='';
+    }else{
+      delete draft.posAction[pos];
+    }
+    renderPosChoices();
+  };
+});
+
+function renderPosChoices(){
+  const box=document.getElementById('pos-choices');
+  const active=Object.keys(draft.posAction);
+  if(!active.length){box.innerHTML='';return;}
+  box.innerHTML=active.map(pos=>{
+    const choices=POS_CHOICES[pos]||['その他'];
+    const chips=choices.map(c=>
+      '<span class="chip'+(draft.posAction[pos]===c?' on':'')+'" data-pos="'+pos+'" data-c="'+esc(c)+'">'+esc(c)+'</span>'
+    ).join('');
+    return '<div class="pos-block"><div class="pos-label">'+pos+'の判断</div><div class="chips">'+chips+'</div></div>';
+  }).join('');
+  box.querySelectorAll('.chip').forEach(ch=>{
+    ch.onclick=()=>{
+      const pos=ch.dataset.pos;
+      const c=ch.dataset.c;
+      box.querySelectorAll('.chip[data-pos="'+pos+'"]').forEach(x=>x.classList.remove('on'));
+      ch.classList.add('on');
+      draft.posAction[pos]=c;
+    };
+  });
+}
+
 document.querySelectorAll('#seg-side button').forEach(b=>{
   b.onclick=()=>{
     document.querySelectorAll('#seg-side button').forEach(x=>x.classList.remove('on'));
@@ -420,10 +488,12 @@ document.querySelectorAll('#seg-side button').forEach(b=>{
     draft.side=b.dataset.side;
     document.getElementById('grp-off').classList.toggle('hide',b.dataset.side!=='off');
     document.getElementById('grp-def').classList.toggle('hide',b.dataset.side!=='def');
-    ['ch-off-play','ch-off-intent','ch-def-play','ch-def-intent'].forEach(id=>{
-      document.querySelectorAll('#'+id+' .chip').forEach(x=>x.classList.remove('on'));
+    ['ch-off-play','ch-off-intent','ch-def-play','ch-def-intent','ch-def-pos'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el)el.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
     });
-    draft.play=null;draft.intent=null;
+    draft.play=null;draft.intent=null;draft.posAction={};
+    renderPosChoices();
   };
 });
 
@@ -494,7 +564,10 @@ function renderLog(){
     const jLbl=p.judge==='correct'?'判断○':p.judge==='mistake'?'判断×':'要検討';
     const sideCls=p.side==='off'?'off':'def';
     const sideLbl=p.side==='off'?'攻':'守';
-    return '<div class="log '+jCls+'"><span class="x" data-i="'+realIdx+'">削除</span><div class="meta">'+esc(p.out)+'死 '+esc(runLabel(p.run))+(p.inning?' / '+esc(p.inning):'')+(p.score?' / '+esc(p.score):'')+'</div><span class="tag '+sideCls+'">'+sideLbl+'</span><span class="tag">'+esc(p.play||'-')+'</span><span class="tag">意図:'+esc(p.intent||'-')+'</span><span class="tag '+jCls+'">'+jLbl+'</span>'+(p.result?'<span class="tag">'+esc(p.result)+'</span>':'')+(p.memo?'<div class="body">'+esc(p.memo)+'</div>':'')+'</div>';
+    const posStr=p.posAction&&Object.keys(p.posAction).length
+      ? '<div class="body"><b>関与:</b> '+Object.entries(p.posAction).map(([k,v])=>esc(k)+(v?'='+esc(v):'')).join(' / ')+'</div>'
+      : '';
+    return '<div class="log '+jCls+'"><span class="x" data-i="'+realIdx+'">削除</span><div class="meta">'+esc(p.out)+'死 '+esc(runLabel(p.run))+(p.inning?' / '+esc(p.inning):'')+(p.score?' / '+esc(p.score):'')+'</div><span class="tag '+sideCls+'">'+sideLbl+'</span><span class="tag">'+esc(p.play||'-')+'</span><span class="tag">意図:'+esc(p.intent||'-')+'</span><span class="tag '+jCls+'">'+jLbl+'</span>'+(p.result?'<span class="tag">'+esc(p.result)+'</span>':'')+posStr+(p.memo?'<div class="body">'+esc(p.memo)+'</div>':'')+'</div>';
   }).join('');
   box.querySelectorAll('.x').forEach(x=>{
     x.onclick=()=>{
@@ -525,6 +598,7 @@ document.getElementById('btn-add-play').onclick=()=>{
     inning:document.getElementById('p-inning').value||'',
     score:document.getElementById('p-score').value||'',
     memo:document.getElementById('p-memo').value||'',
+    posAction:draft.side==='def'?Object.assign({},draft.posAction):{},
     t:Date.now()
   });
   save();
@@ -532,7 +606,8 @@ document.getElementById('btn-add-play').onclick=()=>{
   document.getElementById('p-memo').value='';
   document.getElementById('p-inning').value='';
   document.getElementById('p-score').value='';
-  draft={side:draft.side,out:null,run:null,play:null,intent:null,judge:null,result:null};
+  draft={side:draft.side,out:null,run:null,play:null,intent:null,judge:null,result:null,posAction:{}};
+  renderPosChoices();
   renderLog();
   toast('記録しました');
 };
@@ -589,11 +664,17 @@ function ruleSummary(c){
     out+='\n';
   }
 
+  const fmtPos=(x)=>{
+    if(!x.posAction||!Object.keys(x.posAction).length)return '';
+    return '   [関与] '+Object.entries(x.posAction).map(([k,v])=>k+(v?'='+v:'')).join(' / ')+'\n';
+  };
+
   const ok=p.filter(x=>x.judge==='correct');
   if(ok.length){
     out+='【良い判断 - 継続したい型】\n';
     ok.forEach(x=>{
       out+=' ・['+(x.side==='off'?'攻':'守')+'] '+x.out+'死'+runLabel(x.run)+' '+x.play+'('+x.intent+')\n';
+      out+=fmtPos(x);
       if(x.memo)out+='   -> '+x.memo+'\n';
     });
     out+='\n';
@@ -604,6 +685,7 @@ function ruleSummary(c){
     out+='【学びの判断 - 失敗から成長する】\n';
     ng.forEach(x=>{
       out+=' ・['+(x.side==='off'?'攻':'守')+'] '+x.out+'死'+runLabel(x.run)+' '+x.play+'('+x.intent+')\n';
+      out+=fmtPos(x);
       if(x.memo)out+='   -> '+x.memo+'\n';
     });
     out+='\n';
@@ -614,6 +696,7 @@ function ruleSummary(c){
     out+='【要検討 - チームで話し合う場面】\n';
     rv.forEach(x=>{
       out+=' ・['+(x.side==='off'?'攻':'守')+'] '+x.out+'死'+runLabel(x.run)+' '+x.play+'('+x.intent+')\n';
+      out+=fmtPos(x);
       if(x.memo)out+='   -> '+x.memo+'\n';
     });
     out+='\n';
@@ -641,9 +724,12 @@ async function aiSummary(c){
   if(!key){toast('APIキー未設定 - 集計のみ表示');return ruleSummary(c);}
   if(!c||!c.plays.length)return 'プレー記録がありません';
   const plays=c.plays.map((p,i)=>{
-    return (i+1)+'. ['+(p.side==='off'?'攻':'守')+'] '+p.out+'死'+runLabel(p.run)+(p.inning?' '+p.inning:'')+(p.score?' '+p.score:'')+' / '+p.play+'(意図:'+p.intent+') / 判断:'+(p.judge==='correct'?'正解':p.judge==='mistake'?'ミス':'要検討')+(p.result?' / 結果:'+p.result:'')+(p.memo?'\n   メモ: '+p.memo:'');
+    const posStr=p.posAction&&Object.keys(p.posAction).length
+      ? '\n   関与ポジション: '+Object.entries(p.posAction).map(([k,v])=>k+(v?'='+v:'')).join(' / ')
+      : '';
+    return (i+1)+'. ['+(p.side==='off'?'攻':'守')+'] '+p.out+'死'+runLabel(p.run)+(p.inning?' '+p.inning:'')+(p.score?' '+p.score:'')+' / '+p.play+'(意図:'+p.intent+') / 判断:'+(p.judge==='correct'?'正解':p.judge==='mistake'?'ミス':'要検討')+(p.result?' / 結果:'+p.result:'')+posStr+(p.memo?'\n   メモ: '+p.memo:'');
   }).join('\n');
-  const prompt='あなたはソフトボールの指導者です。以下の記録はプレーの技術的結果ではなく「状況判断」を評価したものです。これは練習または試合で生じた場面を、チームで共有する「判断の辞典」に蓄積するためのデータです。\n\n重視する価値観:\n- 攻撃側: 前の塁へ進むこと、得点を最大化すること\n- 守備側: 失点を阻止すること、最小失点に抑えること\n- ファインプレーより状況判断の正しさ\n- 失敗の数が成長の数。悪い判断こそチームで共有すべき財産\n\n以下のログから、チーム全体で共有すべき内容を日本語でまとめてください。\n\n必須で含めること:\n1. 【良い判断】- 継続・水平展開すべき成功例\n2. 【失敗から学ぶ判断】- 悪い判断を責めずに、なぜミスだったか・正解は何だったか・次どうするかを具体的に。失敗は隠さず全件取り上げる\n3. 【要検討の場面】- チーム全員で意見を出し合うべき微妙な判断\n4. 【次回の事前準備】- 具体的にやるべきこと\n\nスタイル:\n- チーム向けの前向きな共有メッセージ\n- 失敗を取り上げる際も責める表現は避け「次にどう活かすか」に焦点\n- 箇条書き中心・具体的に・600字程度\n\n日付: '+c.date+' / 場所: '+c.place+' / 区分: '+(c.type==='game'?'試合':'練習')+' / '+c.kind+(c.note?' / '+c.note:'')+'\n\nプレー記録:\n'+plays;
+  const prompt='あなたはソフトボールの指導者です。以下の記録はプレーの技術的結果ではなく「状況判断」を評価したものです。これは練習または試合で生じた場面を、チームで共有する「判断の辞典」に蓄積するためのデータです。\n\n重視する価値観:\n- 攻撃側: 前の塁へ進むこと、得点を最大化すること\n- 守備側: 失点を阻止すること、最小失点に抑えること\n- ファインプレーより状況判断の正しさ\n- 失敗の数が成長の数。悪い判断こそチームで共有すべき財産\n- 守備の連携は「関与ポジション」ごとの役割を明確にして共有することで再現可能になる\n\n以下のログから、チーム全体で共有すべき内容を日本語でまとめてください。\n\n必須で含めること:\n1. 【良い判断】- 継続・水平展開すべき成功例\n2. 【失敗から学ぶ判断】- 悪い判断を責めずに、なぜミスだったか・正解は何だったか・次どうするかを具体的に。失敗は隠さず全件取り上げる\n3. 【要検討の場面】- チーム全員で意見を出し合うべき微妙な判断。守備の場合は各ポジションの役割に触れる\n4. 【次回の事前準備】- 具体的にやるべきこと\n\nスタイル:\n- チーム向けの前向きな共有メッセージ\n- 失敗を取り上げる際も責める表現は避け「次にどう活かすか」に焦点\n- 守備の場面は関与ポジションがあればそれぞれの動きに言及\n- 箇条書き中心・具体的に・600字程度\n\n日付: '+c.date+' / 場所: '+c.place+' / 区分: '+(c.type==='game'?'試合':'練習')+' / '+c.kind+(c.note?' / '+c.note:'')+'\n\nプレー記録:\n'+plays;
   try{
     const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+encodeURIComponent(key),{
       method:'POST',headers:{'Content-Type':'application/json'},
