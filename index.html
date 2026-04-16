@@ -568,12 +568,13 @@ function ruleSummary(c){
   const rate=p.length?Math.round(cor*100/p.length):0;
 
   let out='■ '+c.date+' / '+c.place+' ['+(c.type==='game'?'試合':'練習')+']\n'+c.kind+(c.note?' - '+c.note:'')+'\n\n';
-  out+='【判断正答率】 '+rate+'%  (正解'+cor+'/要検討'+rev+'/ミス'+mis+')\n';
+  const growth=rev+mis;
+  out+='【成長の数】 '+growth+' (要検討'+rev+'/学び'+mis+') / 正解'+cor+'\n';
   out+='攻撃:'+off.length+'件  守備:'+def.length+'件\n\n';
 
   const offMis=off.filter(x=>x.judge!=='correct');
   if(offMis.length){
-    out+='【攻撃側の課題】\n';
+    out+='【攻撃側の学びどころ】\n';
     const byPlay={};
     offMis.forEach(x=>byPlay[x.play]=(byPlay[x.play]||0)+1);
     Object.entries(byPlay).sort((a,b)=>b[1]-a[1]).forEach(([k,v])=>out+=' ・'+k+': '+v+'件\n');
@@ -581,7 +582,7 @@ function ruleSummary(c){
   }
   const defMis=def.filter(x=>x.judge!=='correct');
   if(defMis.length){
-    out+='【守備側の課題】\n';
+    out+='【守備側の学びどころ】\n';
     const byPlay={};
     defMis.forEach(x=>byPlay[x.play]=(byPlay[x.play]||0)+1);
     Object.entries(byPlay).sort((a,b)=>b[1]-a[1]).forEach(([k,v])=>out+=' ・'+k+': '+v+'件\n');
@@ -619,9 +620,16 @@ function ruleSummary(c){
   }
 
   out+='【全体コメント】\n';
-  if(rate>=70)out+=' ・判断力は良好。継続して場面を増やす。\n';
-  else if(rate>=40)out+=' ・判断が割れる場面あり。チームで考え方を統一すべき。\n';
-  else out+=' ・基本的な状況判断の再確認が必要。ミーティング推奨。\n';
+  if(p.length<=2){
+    if(growth>0)out+=' ・1つの場面を深掘りしてチームで辞典化しよう。\n';
+    else out+=' ・良い判断を言語化して、型として共有しよう。\n';
+  }else if(rate>=70){
+    out+=' ・判断の軸がそろってきている。場面のバリエーションを増やそう。\n';
+  }else if(rate>=40){
+    out+=' ・判断が割れる場面あり。チームで考え方を統一しよう。\n';
+  }else{
+    out+=' ・学びの宝庫。失敗の背景を共有して次に活かそう。\n';
+  }
   if(off.length&&defMis.length>off.length)out+=' ・守備の判断課題が多い。連携確認を優先。\n';
   if(def.length&&offMis.length>def.length)out+=' ・攻撃の判断課題が多い。サイン・意図の共有を。\n';
 
