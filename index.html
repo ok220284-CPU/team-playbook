@@ -55,6 +55,11 @@ button.btn.sub{background:#fff;color:#1a1a1a;border:1.5px solid #1a1a1a}
 .chip.ok.on{background:var(--ok);color:#fff;border-color:var(--ok)}
 .chip.warn.on{background:var(--warn);color:#fff;border-color:var(--warn)}
 .chip.ng.on{background:var(--ng);color:#fff;border-color:var(--ng)}
+.chip[data-order]::before{content:'①';position:relative;margin-right:2px;font-size:11px;font-weight:900}
+.chip[data-order="2"]::before{content:'②'}
+.chip[data-order="3"]::before{content:'③'}
+.chip[data-order="4"]::before{content:'④'}
+.chip[data-order="5"]::before{content:'⑤'}
 .seg{display:flex;background:#1a1a1a;border-radius:8px;padding:3px;margin:4px 0}
 .seg button{flex:1;background:none;border:none;color:#a99bc2;padding:10px;
   border-radius:6px;font-size:13px;font-weight:700;cursor:pointer}
@@ -260,7 +265,7 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
         <span class="chip" data-v="帰塁判断">帰塁判断</span>
       </div>
 
-      <label>意図（何を狙ったか）</label>
+      <label>意図・優先順位（タップ順が①②③）</label>
       <div class="chips" id="ch-off-intent">
         <span class="chip" data-v="進塁">進塁</span>
         <span class="chip" data-v="得点">得点</span>
@@ -291,7 +296,7 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
         <span class="chip" data-v="タッチプレー">タッチプレー</span>
       </div>
 
-      <label>意図(何を守ったか)</label>
+      <label>意図・優先順位（タップ順が①②③）</label>
       <div class="chips" id="ch-def-intent">
         <span class="chip" data-v="失点阻止">失点阻止</span>
         <span class="chip" data-v="最小失点">最小失点</span>
@@ -470,7 +475,7 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
   <div class="card">
     <h2>このアプリについて</h2>
     <p class="hint">
-      プレーブック v3.0<br>
+      プレーブック v3.1<br>
       - チーム判断辞典 -<br>
       練習も試合も、失敗も成功も、チーム全員の判断を蓄積する<br>
       単一HTML・ローカル保存・PWA対応<br>
@@ -500,7 +505,7 @@ const STORE='sb_note_v2';
 const OLD_STORE='sb_note_v1';
 const KEY='sb_gemini_key';
 let state={sessions:[],currentId:null};
-let draft={side:null,out:null,run:null,play:null,intent:null,judge:null,result:null,posAction:{}};
+let draft={side:null,out:null,run:null,play:null,intents:[],judge:null,result:null,posAction:{}};
 
 function load(){
   try{
@@ -578,9 +583,35 @@ function setupChips(containerId,field){
 setupChips('ch-out','out');
 setupChips('ch-run','run');
 setupChips('ch-off-play','play');
-setupChips('ch-off-intent','intent');
+// 意図は複数選択・タップ順で優先順位
+function setupIntentChips(containerId){
+  const c=document.getElementById(containerId);
+  c.querySelectorAll('.chip').forEach(ch=>{
+    ch.onclick=()=>{
+      if(ch.classList.contains('on')){
+        ch.classList.remove('on');
+        ch.removeAttribute('data-order');
+        draft.intents=draft.intents.filter(x=>x!==ch.dataset.v);
+        renumberIntents(containerId);
+      }else{
+        ch.classList.add('on');
+        draft.intents.push(ch.dataset.v);
+        ch.setAttribute('data-order',draft.intents.length);
+      }
+    };
+  });
+}
+function renumberIntents(containerId){
+  let i=1;
+  const c=document.getElementById(containerId);
+  draft.intents.forEach(v=>{
+    const ch=c.querySelector('.chip[data-v="'+v+'"]');
+    if(ch)ch.setAttribute('data-order',i++);
+  });
+}
+setupIntentChips('ch-off-intent');
 setupChips('ch-def-play','play');
-setupChips('ch-def-intent','intent');
+setupIntentChips('ch-def-intent');
 setupChips('ch-judge','judge');
 setupChips('ch-result','result');
 
@@ -644,7 +675,7 @@ document.querySelectorAll('#seg-side button').forEach(b=>{
       const el=document.getElementById(id);
       if(el)el.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
     });
-    draft.play=null;draft.intent=null;draft.posAction={};
+    draft.play=null;draft.intents=[];draft.posAction={};
     renderPosChoices();
   };
 });
@@ -719,7 +750,10 @@ function renderLog(){
     const posStr=p.posAction&&Object.keys(p.posAction).length
       ? '<div class="body"><b>関与:</b> '+Object.entries(p.posAction).map(([k,v])=>esc(k)+(v?'='+esc(v):'')).join(' / ')+'</div>'
       : '';
-    return '<div class="log '+jCls+'"><span class="x" data-i="'+realIdx+'">削除</span><div class="meta">'+esc(p.out)+'死 '+esc(runLabel(p.run))+(p.inning?' / '+esc(p.inning):'')+(p.score?' / '+esc(p.score):'')+'</div><span class="tag '+sideCls+'">'+sideLbl+'</span><span class="tag">'+esc(p.play||'-')+'</span><span class="tag">意図:'+esc(p.intent||'-')+'</span><span class="tag '+jCls+'">'+jLbl+'</span>'+(p.result?'<span class="tag">'+esc(p.result)+'</span>':'')+posStr+(p.memo?'<div class="body">'+esc(p.memo)+'</div>':'')+'</div>';
+    const nums=['①','②','③','④','⑤'];
+    const intentArr=p.intents||[p.intent].filter(Boolean);
+    const intentStr=intentArr.length?intentArr.map((v,j)=>(intentArr.length>1?nums[j]:'')+esc(v)).join(' '):'—';
+    return '<div class="log '+jCls+'"><span class="x" data-i="'+realIdx+'">削除</span><div class="meta">'+esc(p.out)+'死 '+esc(runLabel(p.run))+(p.inning?' / '+esc(p.inning):'')+(p.score?' / '+esc(p.score):'')+'</div><span class="tag '+sideCls+'">'+sideLbl+'</span><span class="tag">'+esc(p.play||'-')+'</span><span class="tag">意図:'+intentStr+'</span><span class="tag '+jCls+'">'+jLbl+'</span>'+(p.result?'<span class="tag">'+esc(p.result)+'</span>':'')+posStr+(p.memo?'<div class="body">'+esc(p.memo)+'</div>':'')+'</div>';
   }).join('');
   box.querySelectorAll('.x').forEach(x=>{
     x.onclick=()=>{
@@ -741,11 +775,11 @@ document.getElementById('btn-add-play').onclick=()=>{
   if(!c){toast('先にセッション作成');return;}
   if(!draft.side){toast('攻撃/守備を選択');return;}
   if(draft.out===null||!draft.run){toast('アウト・ランナーを選択');return;}
-  if(!draft.play||!draft.intent){toast('プレー種別と意図を選択');return;}
+  if(!draft.play||!draft.intents.length){toast('プレー種別と意図を選択');return;}
   if(!draft.judge){toast('判断の評価を選択');return;}
   c.plays.push({
     side:draft.side,out:draft.out,run:draft.run,
-    play:draft.play,intent:draft.intent,
+    play:draft.play,intent:draft.intents[0]||'',intents:draft.intents.slice(),
     judge:draft.judge,result:draft.result||'',
     inning:document.getElementById('p-inning').value||'',
     score:document.getElementById('p-score').value||'',
@@ -758,7 +792,7 @@ document.getElementById('btn-add-play').onclick=()=>{
   document.getElementById('p-memo').value='';
   document.getElementById('p-inning').value='';
   document.getElementById('p-score').value='';
-  draft={side:draft.side,out:null,run:null,play:null,intent:null,judge:null,result:null,posAction:{}};
+  draft={side:draft.side,out:null,run:null,play:null,intents:[],judge:null,result:null,posAction:{}};
   renderPosChoices();
   renderLog();
   toast('記録しました');
@@ -825,7 +859,7 @@ function ruleSummary(c){
   if(ok.length){
     out+='【良い判断 - 継続したい型】\n';
     ok.forEach(x=>{
-      out+=' ・['+(x.side==='off'?'攻':'守')+'] '+x.out+'死'+runLabel(x.run)+' '+x.play+'('+x.intent+')\n';
+      out+=' ・['+(x.side==='off'?'攻':'守')+'] '+x.out+'死'+runLabel(x.run)+' '+x.play+'('+(x.intents||[x.intent]).filter(Boolean).map((v,j,a)=>(a.length>1?['①','②','③','④','⑤'][j]:'')+v).join(' ')+')\n';
       out+=fmtPos(x);
       if(x.memo)out+='   -> '+x.memo+'\n';
     });
@@ -836,7 +870,7 @@ function ruleSummary(c){
   if(ng.length){
     out+='【学びの判断 - 失敗から成長する】\n';
     ng.forEach(x=>{
-      out+=' ・['+(x.side==='off'?'攻':'守')+'] '+x.out+'死'+runLabel(x.run)+' '+x.play+'('+x.intent+')\n';
+      out+=' ・['+(x.side==='off'?'攻':'守')+'] '+x.out+'死'+runLabel(x.run)+' '+x.play+'('+(x.intents||[x.intent]).filter(Boolean).map((v,j,a)=>(a.length>1?['①','②','③','④','⑤'][j]:'')+v).join(' ')+')\n';
       out+=fmtPos(x);
       if(x.memo)out+='   -> '+x.memo+'\n';
     });
@@ -847,7 +881,7 @@ function ruleSummary(c){
   if(rv.length){
     out+='【要検討 - チームで話し合う場面】\n';
     rv.forEach(x=>{
-      out+=' ・['+(x.side==='off'?'攻':'守')+'] '+x.out+'死'+runLabel(x.run)+' '+x.play+'('+x.intent+')\n';
+      out+=' ・['+(x.side==='off'?'攻':'守')+'] '+x.out+'死'+runLabel(x.run)+' '+x.play+'('+(x.intents||[x.intent]).filter(Boolean).map((v,j,a)=>(a.length>1?['①','②','③','④','⑤'][j]:'')+v).join(' ')+')\n';
       out+=fmtPos(x);
       if(x.memo)out+='   -> '+x.memo+'\n';
     });
@@ -879,7 +913,7 @@ async function aiSummary(c){
     const posStr=p.posAction&&Object.keys(p.posAction).length
       ? '\n   関与ポジション: '+Object.entries(p.posAction).map(([k,v])=>k+(v?'='+v:'')).join(' / ')
       : '';
-    return (i+1)+'. ['+(p.side==='off'?'攻':'守')+'] '+p.out+'死'+runLabel(p.run)+(p.inning?' '+p.inning:'')+(p.score?' '+p.score:'')+' / '+p.play+'(意図:'+p.intent+') / 判断:'+(p.judge==='correct'?'正解':p.judge==='mistake'?'ミス':'要検討')+(p.result?' / 結果:'+p.result:'')+posStr+(p.memo?'\n   メモ: '+p.memo:'');
+    return (i+1)+'. ['+(p.side==='off'?'攻':'守')+'] '+p.out+'死'+runLabel(p.run)+(p.inning?' '+p.inning:'')+(p.score?' '+p.score:'')+' / '+p.play+'(意図:'+(p.intents||[p.intent]).filter(Boolean).join('→')+') / 判断:'+(p.judge==='correct'?'正解':p.judge==='mistake'?'ミス':'要検討')+(p.result?' / 結果:'+p.result:'')+posStr+(p.memo?'\n   メモ: '+p.memo:'');
   }).join('\n');
   const prompt='あなたはソフトボールの指導者です。以下の記録はプレーの技術的結果ではなく「状況判断」を評価したものです。これは練習または試合で生じた場面を、チームで共有する「判断の辞典」に蓄積するためのデータです。\n\n重視する価値観:\n- 攻撃側: 前の塁へ進むこと、得点を最大化すること\n- 守備側: 失点を阻止すること、最小失点に抑えること\n- ファインプレーより状況判断の正しさ\n- 失敗の数が成長の数。悪い判断こそチームで共有すべき財産\n- 守備の連携は「関与ポジション」ごとの役割を明確にして共有することで再現可能になる\n\n以下のログから、チーム全体で共有すべき内容を日本語でまとめてください。\n\n必須で含めること:\n1. 【良い判断】- 継続・水平展開すべき成功例\n2. 【失敗から学ぶ判断】- 悪い判断を責めずに、なぜミスだったか・正解は何だったか・次どうするかを具体的に。失敗は隠さず全件取り上げる\n3. 【要検討の場面】- チーム全員で意見を出し合うべき微妙な判断。守備の場合は各ポジションの役割に触れる\n4. 【次回の事前準備】- 具体的にやるべきこと\n\nスタイル:\n- チーム向けの前向きな共有メッセージ\n- 失敗を取り上げる際も責める表現は避け「次にどう活かすか」に焦点\n- 守備の場面は関与ポジションがあればそれぞれの動きに言及\n- 箇条書き中心・具体的に・600字程度\n\n日付: '+c.date+' / 場所: '+c.place+' / 区分: '+(c.type==='game'?'試合':'練習')+' / '+c.kind+(c.note?' / '+c.note:'')+'\n\nプレー記録:\n'+plays;
   try{
@@ -1086,7 +1120,7 @@ document.getElementById('btn-rule-ai').onclick=async()=>{
   const plays=c.plays.map((p,i)=>{
     const posStr=p.posAction&&Object.keys(p.posAction).length
       ? ' / 関与:'+Object.entries(p.posAction).map(([k,v])=>k+(v?'='+v:'')).join(','):'';
-    return (i+1)+'. ['+(p.side==='off'?'攻':'守')+'] '+p.out+'死'+runLabel(p.run)+' '+p.play+'('+p.intent+') 判断:'+(p.judge==='correct'?'正解':p.judge==='mistake'?'ミス':'要検討')+posStr+(p.memo?' / '+p.memo:'');
+    return (i+1)+'. ['+(p.side==='off'?'攻':'守')+'] '+p.out+'死'+runLabel(p.run)+' '+p.play+'('+(p.intents||[p.intent]).filter(Boolean).join('→')+') 判断:'+(p.judge==='correct'?'正解':p.judge==='mistake'?'ミス':'要検討')+posStr+(p.memo?' / '+p.memo:'');
   }).join('\n');
   const existRules=state.rules.length?'\n\n既存ルール:\n'+state.rules.map(r=>r.title+': '+r.criteria).join('\n'):'';
   const prompt='あなたはソフトボールの指導者です。以下のプレー記録から、チームのルール（判断の辞典）として定着させるべき内容を提案してください。\n\n既存ルールと重複しないこと。'+existRules+'\n\n以下のJSON配列のみを返してください（説明文不要・コードブロック不要）:\n[\n  {\n    "title": "ルールのタイトル",\n    "cat": "off" または "def",\n    "situation": "どんな状況で適用するか",\n    "criteria": "何を見て判断するか",\n    "priority": "何を優先するか（①②③形式）",\n    "note": "補足情報"\n  }\n]\n\nプレー記録:\n'+plays;
@@ -1264,7 +1298,7 @@ document.getElementById('btn-imp-save').onclick=()=>{
   impBuffer.forEach((p,i)=>{
     c.plays.push({
       side:p.side||'off',out:p.out||'0',run:p.run||'---',
-      play:p.play||'通常打撃',intent:p.intent||'進塁',
+      play:p.play||'通常打撃',intent:p.intent||'進塁',intents:p.intents||[p.intent||'進塁'],
       judge:p.judge||'review',result:'',
       inning:p.inning||'',score:p.score||'',memo:p.memo||'',
       posAction:p.posAction||{},t:now+i
