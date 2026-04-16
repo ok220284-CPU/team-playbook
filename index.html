@@ -111,6 +111,22 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
 .modal-sub{font-size:12px;color:var(--mute);margin-bottom:12px}
 .modal-msg{font-size:14px;line-height:1.7;margin:0 0 14px}
 .modal-msg b{color:var(--accent);font-size:18px}
+.imp-play{background:#faf7ff;border:1.5px solid var(--line);border-radius:10px;
+  padding:10px;margin-bottom:10px;position:relative}
+.imp-play .imp-num{position:absolute;right:8px;top:6px;background:var(--accent);
+  color:#fff;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:700}
+.imp-play .imp-del{position:absolute;right:8px;top:32px;color:var(--ng);
+  font-size:11px;font-weight:700;cursor:pointer;padding:2px 6px}
+.imp-row{display:flex;gap:6px;margin:6px 0;flex-wrap:wrap}
+.imp-row select,.imp-row input{flex:1;min-width:80px;padding:6px 8px;font-size:12px}
+.imp-row textarea{font-size:12px;min-height:50px}
+.imp-lbl{font-size:10px;color:var(--mute);font-weight:700;margin-right:4px;align-self:center}
+.imp-play .judge-seg{display:flex;gap:4px;margin:6px 0}
+.imp-play .judge-seg button{flex:1;padding:6px;font-size:11px;font-weight:700;
+  border-radius:6px;border:1.5px solid var(--line);background:#fff;cursor:pointer}
+.imp-play .judge-seg button.on.ok{background:var(--ok);color:#fff;border-color:var(--ok)}
+.imp-play .judge-seg button.on.warn{background:var(--warn);color:#fff;border-color:var(--warn)}
+.imp-play .judge-seg button.on.ng{background:var(--ng);color:#fff;border-color:var(--ng)}
 </style>
 </head>
 <body>
@@ -123,6 +139,7 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
 
 <nav class="tabs">
   <button data-tab="rec" class="active">記録</button>
+  <button data-tab="imp">取込</button>
   <button data-tab="hist">履歴</button>
   <button data-tab="sum">まとめ</button>
   <button data-tab="set">設定</button>
@@ -312,6 +329,27 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
   </div>
 </section>
 
+<section id="tab-imp" class="hide">
+  <div class="card">
+    <h2>LINEなどから取り込み</h2>
+    <p class="hint">試合後のLINE会話や練習メモを貼り付けてAIが解析。確認画面で修正して保存できます。</p>
+    <label>貼り付けエリア</label>
+    <textarea id="imp-text" rows="8" placeholder="例: 6回裏0死1塁で盗塁成功。3回表1死1,3塁で盗塁したけど捕手が2塁投げた。田中が3塁から帰ってこれなくて1点献上。あと外野フライで..."></textarea>
+    <button class="btn" id="btn-imp-parse" style="margin-top:8px">AIで解析</button>
+    <p class="hint">※Gemini APIキーが必要（設定タブで登録）</p>
+  </div>
+
+  <div class="card hide" id="imp-result-card">
+    <h2>解析結果 - 確認・修正</h2>
+    <p class="hint">各プレーを確認して、必要に応じて編集してください。OKなら現在のセッションに追加されます。</p>
+    <div id="imp-results"></div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn" id="btn-imp-save">現在のセッションに追加</button>
+      <button class="btn sub" id="btn-imp-cancel">キャンセル</button>
+    </div>
+  </div>
+</section>
+
 <section id="tab-hist" class="hide">
   <div class="card">
     <h2>セッション履歴</h2>
@@ -371,7 +409,7 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
   <div class="card">
     <h2>このアプリについて</h2>
     <p class="hint">
-      プレーブック v2.5<br>
+      プレーブック v2.6<br>
       - チーム判断辞典 -<br>
       練習も試合も、失敗も成功も、チーム全員の判断を蓄積する<br>
       単一HTML・ローカル保存・PWA対応<br>
@@ -458,7 +496,7 @@ document.querySelectorAll('.tabs button').forEach(b=>{
   b.onclick=()=>{
     document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
     b.classList.add('active');
-    ['rec','hist','sum','set'].forEach(id=>{
+    ['rec','imp','hist','sum','set'].forEach(id=>{
       document.getElementById('tab-'+id).classList.toggle('hide',id!==b.dataset.tab);
     });
     if(b.dataset.tab==='hist')renderHist();
@@ -899,6 +937,128 @@ document.getElementById('btn-code-import').onclick=()=>{
   }catch(err){
     toast('復元失敗: コードが不正です',3000);
   }
+};
+
+// 取り込み機能
+let impBuffer=[];
+
+document.getElementById('btn-imp-parse').onclick=async()=>{
+  const key=localStorage.getItem(KEY);
+  if(!key){toast('Gemini APIキーを設定してください');return;}
+  const text=document.getElementById('imp-text').value.trim();
+  if(!text){toast('文章を貼り付けてください');return;}
+  const btn=document.getElementById('btn-imp-parse');
+  btn.textContent='解析中...';btn.disabled=true;
+  try{
+    const prompt='あなたはソフトボールの場面記述を構造化するアシスタントです。以下の自由文から、プレーごとに分解してJSON配列で返してください。\n\n各プレーは以下の形式:\n{\n  "side": "off" または "def",\n  "out": "0","1","2" のいずれか,\n  "run": "---","1--","-2-","--3","12-","1-3","-23","123" のいずれか（ランナー状況）,\n  "play": プレー種別（通常打撃/進塁打狙い/犠打バント/セーフティ/プッシュバント/スクイズ/セーフティスクイズ/バスター/スラップ/ヒットエンドラン/ランエンドヒット/盗塁/ディレードスチール/ギャンブルスタート/タッチアップ/第二リード/帰塁判断/守備位置選択/前進守備/後退守備/中間守備/ゲッツー態勢/送球判断/中継カット/バックアップ/ベースカバー/挟殺/牽制/連携プレー/配球/バント処理/スクイズ対応/タッチプレー から選ぶ）,\n  "intent": 意図（攻撃なら：進塁/得点/出塁/かく乱/時間稼ぎ、守備なら：失点阻止/最小失点/確実にアウト1個/ゲッツー/進塁阻止）,\n  "judge": "correct"(判断正解) / "review"(要検討) / "mistake"(判断ミス),\n  "inning": イニング情報（例:"6回裏"、不明なら""）,\n  "score": 点差（例:"2点ビハインド"、不明なら""）,\n  "memo": 状況の詳細・背景・次どうするか等の文章（元の情報を保持）,\n  "posAction": 守備の場合の関与ポジションと判断。{"捕":"二塁送球","遊":"二塁ベース入り"} 形式。攻撃や不明なら {}\n}\n\n重要:\n- 不明な情報はデフォルト値（out:"0", run:"---", judge:"review"）で埋める\n- memoには元の文章の該当部分をできるだけ残す\n- 説明文や前置きは書かず、JSON配列のみを返す\n- ```json``` のコードブロックは付けない\n\n解析対象:\n'+text;
+    const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+encodeURIComponent(key),{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
+    });
+    const d=await r.json();
+    if(d.error){toast('APIエラー: '+d.error.message,3000);btn.textContent='AIで解析';btn.disabled=false;return;}
+    let txt=d.candidates&&d.candidates[0]&&d.candidates[0].content.parts[0].text||'';
+    // コードブロック除去
+    txt=txt.replace(/```json\s*|\s*```/g,'').trim();
+    let parsed;
+    try{parsed=JSON.parse(txt);}
+    catch(e){toast('JSON解析失敗。もう一度試してください',3000);btn.textContent='AIで解析';btn.disabled=false;return;}
+    if(!Array.isArray(parsed)){toast('解析結果が配列ではありません',3000);btn.textContent='AIで解析';btn.disabled=false;return;}
+    impBuffer=parsed;
+    renderImpResults();
+    document.getElementById('imp-result-card').classList.remove('hide');
+    toast(parsed.length+'件のプレーを解析しました');
+  }catch(e){
+    toast('通信エラー: '+e.message,3000);
+  }
+  btn.textContent='AIで解析';btn.disabled=false;
+};
+
+function renderImpResults(){
+  const box=document.getElementById('imp-results');
+  if(!impBuffer.length){box.innerHTML='<p class="hint">解析結果なし</p>';return;}
+  const playOpts=['通常打撃','進塁打狙い','犠打バント','セーフティ','プッシュバント','スクイズ','セーフティスクイズ','バスター','スラップ','ヒットエンドラン','ランエンドヒット','盗塁','ディレードスチール','ギャンブルスタート','タッチアップ','第二リード','帰塁判断','守備位置選択','前進守備','後退守備','中間守備','ゲッツー態勢','送球判断','中継カット','バックアップ','ベースカバー','挟殺','牽制','連携プレー','配球','バント処理','スクイズ対応','タッチプレー'];
+  const offIntent=['進塁','得点','出塁','かく乱','時間稼ぎ'];
+  const defIntent=['失点阻止','最小失点','確実にアウト1個','ゲッツー','進塁阻止'];
+  const runOpts=[['---','なし'],['1--','1塁'],['-2-','2塁'],['--3','3塁'],['12-','1,2塁'],['1-3','1,3塁'],['-23','2,3塁'],['123','満塁']];
+  box.innerHTML=impBuffer.map((p,i)=>{
+    const intentOpts=p.side==='def'?defIntent:offIntent;
+    const posStr=p.posAction?Object.entries(p.posAction).map(([k,v])=>k+(v?'='+v:'')).join(' / '):'';
+    return '<div class="imp-play" data-i="'+i+'">'+
+      '<span class="imp-num">#'+(i+1)+'</span>'+
+      '<span class="imp-del" data-i="'+i+'">削除</span>'+
+      '<div class="imp-row"><span class="imp-lbl">攻守</span>'+
+        '<select data-f="side"><option value="off"'+(p.side==='off'?' selected':'')+'>攻撃</option><option value="def"'+(p.side==='def'?' selected':'')+'>守備</option></select>'+
+        '<select data-f="out"><option value="0"'+(p.out==='0'?' selected':'')+'>0死</option><option value="1"'+(p.out==='1'?' selected':'')+'>1死</option><option value="2"'+(p.out==='2'?' selected':'')+'>2死</option></select>'+
+        '<select data-f="run">'+runOpts.map(r=>'<option value="'+r[0]+'"'+(p.run===r[0]?' selected':'')+'>'+r[1]+'</option>').join('')+'</select>'+
+      '</div>'+
+      '<div class="imp-row"><span class="imp-lbl">種別</span>'+
+        '<select data-f="play">'+playOpts.map(o=>'<option value="'+esc(o)+'"'+(p.play===o?' selected':'')+'>'+esc(o)+'</option>').join('')+'</select>'+
+        '<select data-f="intent">'+intentOpts.map(o=>'<option value="'+esc(o)+'"'+(p.intent===o?' selected':'')+'>'+esc(o)+'</option>').join('')+'</select>'+
+      '</div>'+
+      '<div class="judge-seg">'+
+        '<button data-j="correct" class="'+(p.judge==='correct'?'on ok':'')+'">判断正解</button>'+
+        '<button data-j="review" class="'+(p.judge==='review'?'on warn':'')+'">要検討</button>'+
+        '<button data-j="mistake" class="'+(p.judge==='mistake'?'on ng':'')+'">判断ミス</button>'+
+      '</div>'+
+      '<div class="imp-row"><input type="text" data-f="inning" placeholder="イニング" value="'+esc(p.inning||'')+'">'+
+        '<input type="text" data-f="score" placeholder="点差" value="'+esc(p.score||'')+'"></div>'+
+      (posStr?'<div class="hint" style="margin:6px 0">関与: '+esc(posStr)+'</div>':'')+
+      '<textarea data-f="memo" class="imp-row" placeholder="メモ">'+esc(p.memo||'')+'</textarea>'+
+    '</div>';
+  }).join('');
+  // イベント設定
+  box.querySelectorAll('.imp-play').forEach(el=>{
+    const idx=parseInt(el.dataset.i);
+    el.querySelectorAll('select,input,textarea').forEach(inp=>{
+      inp.onchange=inp.oninput=()=>{
+        impBuffer[idx][inp.dataset.f]=inp.value;
+        if(inp.dataset.f==='side')renderImpResults(); // side変わったら意図選択肢を更新
+      };
+    });
+    el.querySelectorAll('.judge-seg button').forEach(b=>{
+      b.onclick=()=>{
+        impBuffer[idx].judge=b.dataset.j;
+        renderImpResults();
+      };
+    });
+  });
+  box.querySelectorAll('.imp-del').forEach(x=>{
+    x.onclick=()=>{
+      impBuffer.splice(parseInt(x.dataset.i),1);
+      renderImpResults();
+      if(!impBuffer.length)document.getElementById('imp-result-card').classList.add('hide');
+    };
+  });
+}
+
+document.getElementById('btn-imp-save').onclick=()=>{
+  const c=getCurrent();
+  if(!c){toast('先にセッションを作成してください',3000);return;}
+  if(!impBuffer.length){toast('プレーがありません');return;}
+  const now=Date.now();
+  impBuffer.forEach((p,i)=>{
+    c.plays.push({
+      side:p.side||'off',out:p.out||'0',run:p.run||'---',
+      play:p.play||'通常打撃',intent:p.intent||'進塁',
+      judge:p.judge||'review',result:'',
+      inning:p.inning||'',score:p.score||'',memo:p.memo||'',
+      posAction:p.posAction||{},t:now+i
+    });
+  });
+  save();
+  impBuffer=[];
+  document.getElementById('imp-result-card').classList.add('hide');
+  document.getElementById('imp-text').value='';
+  renderLog();
+  toast(c.plays.length+'件のセッションになりました',2800);
+  document.querySelector('.tabs button[data-tab="rec"]').click();
+};
+
+document.getElementById('btn-imp-cancel').onclick=()=>{
+  impBuffer=[];
+  document.getElementById('imp-result-card').classList.add('hide');
+  toast('キャンセルしました');
 };
 document.getElementById('file-import').onchange=(e)=>{
   const f=e.target.files[0];if(!f)return;
