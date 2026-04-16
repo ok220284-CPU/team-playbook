@@ -3,17 +3,17 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b3d2e">
+<meta name="theme-color" content="#1a0a2e">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22PlayBook%22%2C%22short_name%22%3A%22PlayBook%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230b3d2e%22%2C%22theme_color%22%3A%22%230b3d2e%22%7D">
+<link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22PlayBook%22%2C%22short_name%22%3A%22PlayBook%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%231a0a2e%22%2C%22theme_color%22%3A%22%231a0a2e%22%7D">
 <title>プレーブック - チーム判断辞典</title>
 <style>
 :root{
-  --bg:#0b3d2e;--bg2:#0a2f24;--fg:#f4e9c6;--accent:#e85d4a;--accent2:#f2a93b;
-  --mute:#7a8f82;--card:#103d30;--line:#1d5643;
-  --ok:#6fcf97;--warn:#f2c94c;--ng:#ff8878;
-  --off:#4a9eff;--def:#c77dff;
+  --bg:#1a0a2e;--bg2:#0f0620;--fg:#ffffff;--accent:#b14fff;--accent2:#ffd93d;
+  --mute:#a08cb8;--card:#2a1548;--line:#4a2d7a;
+  --ok:#6fcf97;--warn:#ffd93d;--ng:#ff6b6b;
+  --off:#5dadec;--def:#d98aff;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);
@@ -34,7 +34,7 @@ main{padding:12px 12px 80px;max-width:640px;margin:0 auto}
   padding:14px;margin-bottom:12px}
 .card h2{margin:0 0 10px;font-size:14px;color:var(--accent2);
   border-left:3px solid var(--accent);padding-left:8px}
-label{display:block;font-size:12px;color:var(--mute);margin:10px 0 4px;font-weight:700}
+label{display:block;font-size:12px;color:#c9b8e0;margin:10px 0 4px;font-weight:700}
 input,select,textarea{width:100%;background:var(--bg2);border:1px solid var(--line);
   color:var(--fg);padding:10px;border-radius:8px;font-size:15px;font-family:inherit}
 textarea{resize:vertical;min-height:70px}
@@ -48,10 +48,10 @@ button.btn.sub{background:var(--line);color:var(--fg)}
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0}
 .chip{background:var(--bg2);border:1px solid var(--line);color:var(--fg);
   padding:8px 12px;border-radius:20px;font-size:12px;cursor:pointer;font-weight:600}
-.chip.on{background:var(--accent2);color:#222;border-color:var(--accent2)}
+.chip.on{background:var(--accent);color:#fff;border-color:var(--accent)}
 .chip.ok.on{background:var(--ok);color:#052;border-color:var(--ok)}
-.chip.warn.on{background:var(--warn);color:#420;border-color:var(--warn)}
-.chip.ng.on{background:var(--ng);color:#420;border-color:var(--ng)}
+.chip.warn.on{background:var(--warn);color:#332800;border-color:var(--warn)}
+.chip.ng.on{background:var(--ng);color:#4a0000;border-color:var(--ng)}
 .seg{display:flex;background:var(--bg2);border-radius:8px;padding:3px;margin:4px 0}
 .seg button{flex:1;background:none;border:none;color:var(--mute);padding:10px;
   border-radius:6px;font-size:13px;font-weight:700;cursor:pointer}
@@ -71,11 +71,11 @@ button.btn.sub{background:var(--line);color:var(--fg)}
 .log .meta{color:var(--mute);font-size:11px;margin-bottom:4px}
 .log .tag{display:inline-block;background:var(--line);padding:2px 8px;
   border-radius:10px;font-size:10px;margin-right:4px;font-weight:700}
-.log .tag.off{background:#1a3a5c;color:var(--off)}
-.log .tag.def{background:#3a1a5c;color:var(--def)}
-.log .tag.ok{background:#2d5a3f;color:var(--ok)}
-.log .tag.warn{background:#5a4a1a;color:var(--warn)}
-.log .tag.ng{background:#5a2d2d;color:var(--ng)}
+.log .tag.off{background:#1e3a5c;color:#8ec5f0}
+.log .tag.def{background:#4a2d7a;color:#e0b3ff}
+.log .tag.ok{background:#1e4a2e;color:#8ee5a8}
+.log .tag.warn{background:#5a4a1a;color:#ffe066}
+.log .tag.ng{background:#5a1f1f;color:#ff9999}
 .log .x{position:absolute;right:8px;top:6px;color:var(--ng);cursor:pointer;
   padding:4px 8px;font-weight:700;font-size:11px}
 .log .body{margin-top:6px;white-space:pre-wrap}
@@ -95,7 +95,7 @@ button.btn.sub{background:var(--line);color:var(--fg)}
 .count-badge{display:inline-block;background:var(--accent);color:#fff;
   padding:1px 8px;border-radius:10px;font-size:11px;margin-left:6px}
 hr{border:none;border-top:1px solid var(--line);margin:12px 0}
-.hint{font-size:11px;color:var(--mute);margin:4px 0 0;line-height:1.5}
+.hint{font-size:11px;color:#b8a5cc;margin:4px 0 0;line-height:1.5}
 .group{border-top:1px dashed var(--line);padding-top:10px;margin-top:10px}
 </style>
 </head>
