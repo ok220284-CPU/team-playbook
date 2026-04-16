@@ -130,6 +130,21 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
 .imp-play .judge-seg button.on.ok{background:var(--ok);color:#fff;border-color:var(--ok)}
 .imp-play .judge-seg button.on.warn{background:var(--warn);color:#fff;border-color:var(--warn)}
 .imp-play .judge-seg button.on.ng{background:var(--ng);color:#fff;border-color:var(--ng)}
+.rule-card{background:#fff;border:1.5px solid #1a1a1a;border-radius:10px;
+  padding:12px;margin-bottom:8px;position:relative;box-shadow:2px 2px 0 #1a1a1a}
+.rule-card .rule-title{font-weight:800;font-size:14px;color:#1a1a1a;margin-bottom:6px;
+  padding-right:60px}
+.rule-card .rule-cat{position:absolute;right:8px;top:10px;font-size:10px;
+  padding:2px 8px;border-radius:10px;font-weight:700}
+.rule-card .rule-cat.off{background:#e3f2fd;color:var(--off)}
+.rule-card .rule-cat.def{background:#f3e5f5;color:var(--def)}
+.rule-card .rule-sit{font-size:12px;color:var(--mute);margin-bottom:6px}
+.rule-card .rule-body{font-size:13px;line-height:1.7;white-space:pre-wrap}
+.rule-card .rule-label{font-size:10px;font-weight:800;color:var(--accent);margin-top:8px}
+.rule-card .rule-actions{display:flex;gap:6px;margin-top:8px;justify-content:flex-end}
+.rule-card .rule-actions button{font-size:11px;padding:4px 10px;border-radius:6px;
+  border:1px solid var(--line);background:#fff;font-weight:700;cursor:pointer}
+.rule-card .rule-actions button.del{color:var(--ng);border-color:var(--ng)}
 </style>
 </head>
 <body>
@@ -376,6 +391,49 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
       <button class="btn sub" id="btn-copy-sum">コピー</button>
     </div>
   </div>
+
+  <div class="card">
+    <h2>📖 チームルール - 判断の辞典</h2>
+    <p class="hint">練習・試合から学んだ「この状況ではこう判断する」をチームの辞典として管理します</p>
+
+    <label>絞り込み</label>
+    <div class="chips" id="ch-rule-filter">
+      <span class="chip on" data-v="all">すべて</span>
+      <span class="chip" data-v="off">攻撃</span>
+      <span class="chip" data-v="def">守備</span>
+    </div>
+
+    <div id="rule-list" style="margin-top:10px"></div>
+
+    <button class="btn sub" id="btn-rule-add" style="margin-top:8px">＋ ルールを追加</button>
+    <button class="btn sub" id="btn-rule-ai" style="margin-top:6px">AIで記録からルール候補を提案</button>
+
+    <div id="rule-form" class="hide" style="margin-top:10px">
+      <label>タイトル</label>
+      <input type="text" id="r-title" placeholder="例: 1死1,3塁の盗塁時（守備）">
+      <label>カテゴリ</label>
+      <div class="seg" id="seg-rule-cat">
+        <button data-cat="off" class="on">攻撃</button>
+        <button data-cat="def">守備</button>
+      </div>
+      <label>状況</label>
+      <input type="text" id="r-situation" placeholder="例: 1死1,3塁 / 2死満塁">
+      <label>判断基準（何を見て判断するか）</label>
+      <textarea id="r-criteria" placeholder="例: 捕手はまず三塁ランナーの動きを確認。飛び出していれば三塁送球、動かなければ二塁送球。"></textarea>
+      <label>優先順位（何を最優先するか）</label>
+      <textarea id="r-priority" placeholder="例: ①三塁ランナーの生還阻止 ②一塁ランナーのアウト ③進塁阻止"></textarea>
+      <label>補足メモ（任意）</label>
+      <textarea id="r-note" placeholder="例: 2点差以上リードなら二塁送球を優先でもOK"></textarea>
+      <div class="row" style="margin-top:10px">
+        <button class="btn" id="btn-rule-save">保存</button>
+        <button class="btn sub" id="btn-rule-cancel">キャンセル</button>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:10px">
+      <button class="btn sub" id="btn-rule-share">ルールをまとめてコピー</button>
+    </div>
+  </div>
 </section>
 
 <section id="tab-set" class="hide">
@@ -412,7 +470,7 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
   <div class="card">
     <h2>このアプリについて</h2>
     <p class="hint">
-      プレーブック v2.9<br>
+      プレーブック v3.0<br>
       - チーム判断辞典 -<br>
       練習も試合も、失敗も成功も、チーム全員の判断を蓄積する<br>
       単一HTML・ローカル保存・PWA対応<br>
@@ -467,6 +525,7 @@ function load(){
     }
   }catch(e){}
   if(!state.sessions)state.sessions=[];
+  if(!state.rules)state.rules=[];
   state.sessions.forEach(s=>{if(!s.type)s.type='practice'});
 }
 function save(){localStorage.setItem(STORE,JSON.stringify(state))}
@@ -897,6 +956,168 @@ document.getElementById('btn-end-skip').onclick=()=>{
 document.getElementById('btn-end-cancel').onclick=()=>{
   document.getElementById('end-modal').classList.add('hide');
 };
+
+// チームルール管理
+let ruleFilter='all';
+let editingRuleId=null;
+
+document.querySelectorAll('#ch-rule-filter .chip').forEach(ch=>{
+  ch.onclick=()=>{
+    document.querySelectorAll('#ch-rule-filter .chip').forEach(x=>x.classList.remove('on'));
+    ch.classList.add('on');
+    ruleFilter=ch.dataset.v;
+    renderRules();
+  };
+});
+
+document.querySelectorAll('#seg-rule-cat button').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('#seg-rule-cat button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+  };
+});
+
+document.getElementById('btn-rule-add').onclick=()=>{
+  editingRuleId=null;
+  document.getElementById('rule-form').classList.remove('hide');
+  document.getElementById('r-title').value='';
+  document.getElementById('r-situation').value='';
+  document.getElementById('r-criteria').value='';
+  document.getElementById('r-priority').value='';
+  document.getElementById('r-note').value='';
+  document.querySelectorAll('#seg-rule-cat button').forEach(x=>x.classList.remove('on'));
+  document.querySelector('#seg-rule-cat button[data-cat="off"]').classList.add('on');
+};
+
+document.getElementById('btn-rule-cancel').onclick=()=>{
+  document.getElementById('rule-form').classList.add('hide');
+  editingRuleId=null;
+};
+
+document.getElementById('btn-rule-save').onclick=()=>{
+  const title=document.getElementById('r-title').value.trim();
+  if(!title){toast('タイトルを入力');return;}
+  const cat=document.querySelector('#seg-rule-cat button.on').dataset.cat;
+  const rule={
+    id:editingRuleId||'r'+Date.now(),
+    title:title,
+    cat:cat,
+    situation:document.getElementById('r-situation').value.trim(),
+    criteria:document.getElementById('r-criteria').value.trim(),
+    priority:document.getElementById('r-priority').value.trim(),
+    note:document.getElementById('r-note').value.trim(),
+    t:Date.now()
+  };
+  if(editingRuleId){
+    const idx=state.rules.findIndex(r=>r.id===editingRuleId);
+    if(idx>=0)state.rules[idx]=rule;
+  }else{
+    state.rules.push(rule);
+  }
+  save();
+  document.getElementById('rule-form').classList.add('hide');
+  editingRuleId=null;
+  renderRules();
+  toast(editingRuleId?'更新しました':'ルールを追加しました');
+};
+
+function renderRules(){
+  const box=document.getElementById('rule-list');
+  const list=state.rules.filter(r=>ruleFilter==='all'||r.cat===ruleFilter);
+  if(!list.length){box.innerHTML='<p class="hint">ルールはまだありません。練習・試合の記録から学びをルール化しましょう。</p>';return;}
+  box.innerHTML=list.map(r=>{
+    return '<div class="rule-card" data-id="'+r.id+'">'+
+      '<span class="rule-cat '+(r.cat==='off'?'off':'def')+'">'+(r.cat==='off'?'攻撃':'守備')+'</span>'+
+      '<div class="rule-title">'+esc(r.title)+'</div>'+
+      (r.situation?'<div class="rule-sit">状況: '+esc(r.situation)+'</div>':'')+
+      (r.criteria?'<div class="rule-label">判断基準</div><div class="rule-body">'+esc(r.criteria)+'</div>':'')+
+      (r.priority?'<div class="rule-label">優先順位</div><div class="rule-body">'+esc(r.priority)+'</div>':'')+
+      (r.note?'<div class="rule-label">補足</div><div class="rule-body">'+esc(r.note)+'</div>':'')+
+      '<div class="rule-actions">'+
+        '<button data-act="edit" data-id="'+r.id+'">編集</button>'+
+        '<button class="del" data-act="del" data-id="'+r.id+'">削除</button>'+
+      '</div></div>';
+  }).join('');
+  box.querySelectorAll('button[data-act="edit"]').forEach(b=>{
+    b.onclick=()=>{
+      const r=state.rules.find(x=>x.id===b.dataset.id);
+      if(!r)return;
+      editingRuleId=r.id;
+      document.getElementById('rule-form').classList.remove('hide');
+      document.getElementById('r-title').value=r.title;
+      document.getElementById('r-situation').value=r.situation||'';
+      document.getElementById('r-criteria').value=r.criteria||'';
+      document.getElementById('r-priority').value=r.priority||'';
+      document.getElementById('r-note').value=r.note||'';
+      document.querySelectorAll('#seg-rule-cat button').forEach(x=>x.classList.remove('on'));
+      document.querySelector('#seg-rule-cat button[data-cat="'+r.cat+'"]').classList.add('on');
+    };
+  });
+  box.querySelectorAll('button[data-act="del"]').forEach(b=>{
+    b.onclick=()=>{
+      state.rules=state.rules.filter(x=>x.id!==b.dataset.id);
+      save();renderRules();toast('削除しました');
+    };
+  });
+}
+
+document.getElementById('btn-rule-share').onclick=()=>{
+  if(!state.rules.length){toast('ルールがありません');return;}
+  let out='📖 チームルール（判断の辞典）\n\n';
+  state.rules.forEach((r,i)=>{
+    out+='━━━ '+(i+1)+'. '+r.title+' ['+(r.cat==='off'?'攻撃':'守備')+']\n';
+    if(r.situation)out+='状況: '+r.situation+'\n';
+    if(r.criteria)out+='判断基準: '+r.criteria+'\n';
+    if(r.priority)out+='優先順位: '+r.priority+'\n';
+    if(r.note)out+='補足: '+r.note+'\n';
+    out+='\n';
+  });
+  navigator.clipboard.writeText(out).then(()=>toast('コピーしました'))
+    .catch(()=>toast('コピーに失敗しました'));
+};
+
+document.getElementById('btn-rule-ai').onclick=async()=>{
+  const key=localStorage.getItem(KEY);
+  if(!key){toast('Gemini APIキー未設定');return;}
+  const c=getCurrent();
+  if(!c||!c.plays.length){toast('現在のセッションに記録がありません');return;}
+  const btn=document.getElementById('btn-rule-ai');
+  btn.textContent='提案中...';btn.disabled=true;
+  const plays=c.plays.map((p,i)=>{
+    const posStr=p.posAction&&Object.keys(p.posAction).length
+      ? ' / 関与:'+Object.entries(p.posAction).map(([k,v])=>k+(v?'='+v:'')).join(','):'';
+    return (i+1)+'. ['+(p.side==='off'?'攻':'守')+'] '+p.out+'死'+runLabel(p.run)+' '+p.play+'('+p.intent+') 判断:'+(p.judge==='correct'?'正解':p.judge==='mistake'?'ミス':'要検討')+posStr+(p.memo?' / '+p.memo:'');
+  }).join('\n');
+  const existRules=state.rules.length?'\n\n既存ルール:\n'+state.rules.map(r=>r.title+': '+r.criteria).join('\n'):'';
+  const prompt='あなたはソフトボールの指導者です。以下のプレー記録から、チームのルール（判断の辞典）として定着させるべき内容を提案してください。\n\n既存ルールと重複しないこと。'+existRules+'\n\n以下のJSON配列のみを返してください（説明文不要・コードブロック不要）:\n[\n  {\n    "title": "ルールのタイトル",\n    "cat": "off" または "def",\n    "situation": "どんな状況で適用するか",\n    "criteria": "何を見て判断するか",\n    "priority": "何を優先するか（①②③形式）",\n    "note": "補足情報"\n  }\n]\n\nプレー記録:\n'+plays;
+  try{
+    const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+encodeURIComponent(key),{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
+    });
+    const d=await r.json();
+    if(d.error){toast('APIエラー: '+d.error.message,3000);btn.textContent='AIで記録からルール候補を提案';btn.disabled=false;return;}
+    let txt=d.candidates&&d.candidates[0]&&d.candidates[0].content.parts[0].text||'';
+    txt=txt.replace(/```json\s*|\s*```/g,'').trim();
+    const parsed=JSON.parse(txt);
+    if(!Array.isArray(parsed)||!parsed.length){toast('提案が見つかりませんでした');btn.textContent='AIで記録からルール候補を提案';btn.disabled=false;return;}
+    parsed.forEach(p=>{
+      state.rules.push({
+        id:'r'+Date.now()+Math.random().toString(36).slice(2,6),
+        title:p.title||'無題',cat:p.cat||'off',
+        situation:p.situation||'',criteria:p.criteria||'',
+        priority:p.priority||'',note:p.note||'',t:Date.now()
+      });
+    });
+    save();renderRules();
+    toast(parsed.length+'件のルールを追加しました',2800);
+  }catch(e){
+    toast('エラー: '+e.message,3000);
+  }
+  btn.textContent='AIで記録からルール候補を提案';btn.disabled=false;
+};
+
+renderRules();
 
 // コード出力：10KB未満ならBase64で表示、以上なら警告
 document.getElementById('btn-code-out').onclick=()=>{
