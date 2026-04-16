@@ -150,6 +150,22 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
 .rule-card .rule-actions button{font-size:11px;padding:4px 10px;border-radius:6px;
   border:1px solid var(--line);background:#fff;font-weight:700;cursor:pointer}
 .rule-card .rule-actions button.del{color:var(--ng);border-color:var(--ng)}
+.theme-card{background:#fff;border:1.5px solid #1a1a1a;border-radius:10px;
+  padding:12px;margin-bottom:8px;position:relative;box-shadow:2px 2px 0 #1a1a1a}
+.theme-card .th-title{font-weight:800;font-size:15px;margin-bottom:4px}
+.theme-card .th-sub{font-size:12px;color:var(--mute);margin-bottom:4px}
+.theme-card .th-body{font-size:13px;line-height:1.7;white-space:pre-wrap;margin-top:6px}
+.theme-card .th-label{font-size:10px;font-weight:800;color:var(--accent);margin-top:8px}
+.theme-card .th-actions{display:flex;gap:6px;margin-top:8px;justify-content:flex-end}
+.theme-card .th-actions button{font-size:11px;padding:4px 10px;border-radius:6px;
+  border:1px solid var(--line);background:#fff;font-weight:700;cursor:pointer}
+.theme-card .th-actions button.del{color:var(--ng);border-color:var(--ng)}
+.th-type{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;
+  font-weight:700;margin-right:4px}
+.th-type.成果{background:#e8f5e9;color:var(--ok)}
+.th-type.課題{background:#ffebee;color:var(--ng)}
+.th-type.気づき{background:#e3f2fd;color:var(--off)}
+.th-type.方針変更{background:#f3e5f5;color:var(--def)}
 </style>
 </head>
 <body>
@@ -163,6 +179,7 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
 <nav class="tabs">
   <button data-tab="rec" class="active">記録</button>
   <button data-tab="imp">取込</button>
+  <button data-tab="theme">テーマ</button>
   <button data-tab="hist">履歴</button>
   <button data-tab="sum">まとめ</button>
   <button data-tab="set">設定</button>
@@ -373,6 +390,75 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
   </div>
 </section>
 
+<section id="tab-theme" class="hide">
+  <div class="card">
+    <h2>🎯 年間テーマ</h2>
+    <div id="theme-year-view"></div>
+    <div id="theme-year-form" class="hide" style="margin-top:8px">
+      <input type="text" id="ty-title" placeholder="例: 走塁でプレッシャーをかけるチームになる">
+      <label>目的・ビジョン</label>
+      <textarea id="ty-purpose" placeholder="例: 全員が状況判断できるチームへ。走塁で相手にミスを誘う"></textarea>
+      <label>期間</label>
+      <div class="row">
+        <input type="month" id="ty-from">
+        <input type="month" id="ty-to">
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="btn-ty-save">保存</button>
+        <button class="btn sub" id="btn-ty-cancel">キャンセル</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📅 月間テーマ</h2>
+    <div id="theme-month-list"></div>
+    <button class="btn sub" id="btn-tm-add" style="margin-top:8px">＋ 月間テーマを追加</button>
+    <div id="theme-month-form" class="hide" style="margin-top:8px">
+      <label>対象月</label>
+      <input type="month" id="tm-month">
+      <label>テーマ</label>
+      <input type="text" id="tm-title" placeholder="例: 1,3塁の判断を全員で統一する">
+      <label>目的</label>
+      <textarea id="tm-purpose" placeholder="例: 守備全ポジションが1,3塁の盗塁対応を理解する"></textarea>
+      <label>重点項目</label>
+      <textarea id="tm-focus" placeholder="例: ①捕手の判断基準 ②二塁手の体勢 ③投手のカット判断"></textarea>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="btn-tm-save">保存</button>
+        <button class="btn sub" id="btn-tm-cancel">キャンセル</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📋 振り返り・成果ログ</h2>
+    <p class="hint">月間テーマに対する気づきや成果を記録。新メンバーが過去を振り返れるように。</p>
+    <div id="theme-log-list"></div>
+    <button class="btn sub" id="btn-tl-add" style="margin-top:8px">＋ 振り返りを追加</button>
+    <div id="theme-log-form" class="hide" style="margin-top:8px">
+      <label>対象月</label>
+      <select id="tl-month"></select>
+      <label>区分</label>
+      <div class="chips" id="ch-tl-type">
+        <span class="chip on" data-v="成果">成果</span>
+        <span class="chip" data-v="課題">課題</span>
+        <span class="chip" data-v="気づき">気づき</span>
+        <span class="chip" data-v="方針変更">方針変更</span>
+      </div>
+      <label>内容</label>
+      <textarea id="tl-body" placeholder="例: 捕手の判断基準がチーム内で統一できた。ミスが3件→0件に"></textarea>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="btn-tl-save">保存</button>
+        <button class="btn sub" id="btn-tl-cancel">キャンセル</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <button class="btn sub" id="btn-theme-copy">テーマ全体をコピー（共有用）</button>
+  </div>
+</section>
+
 <section id="tab-hist" class="hide">
   <div class="card">
     <h2>セッション履歴</h2>
@@ -475,7 +561,7 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
   <div class="card">
     <h2>このアプリについて</h2>
     <p class="hint">
-      プレーブック v3.1<br>
+      プレーブック v3.2<br>
       - チーム判断辞典 -<br>
       練習も試合も、失敗も成功も、チーム全員の判断を蓄積する<br>
       単一HTML・ローカル保存・PWA対応<br>
@@ -531,6 +617,9 @@ function load(){
   }catch(e){}
   if(!state.sessions)state.sessions=[];
   if(!state.rules)state.rules=[];
+  if(!state.yearTheme)state.yearTheme=null;
+  if(!state.monthThemes)state.monthThemes=[];
+  if(!state.themeLogs)state.themeLogs=[];
   state.sessions.forEach(s=>{if(!s.type)s.type='practice'});
 }
 function save(){localStorage.setItem(STORE,JSON.stringify(state))}
@@ -563,7 +652,7 @@ document.querySelectorAll('.tabs button').forEach(b=>{
   b.onclick=()=>{
     document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
     b.classList.add('active');
-    ['rec','imp','hist','sum','set'].forEach(id=>{
+    ['rec','imp','theme','hist','sum','set'].forEach(id=>{
       document.getElementById('tab-'+id).classList.toggle('hide',id!==b.dataset.tab);
     });
     if(b.dataset.tab==='hist')renderHist();
@@ -1152,6 +1241,126 @@ document.getElementById('btn-rule-ai').onclick=async()=>{
 };
 
 renderRules();
+
+// テーマ管理
+let editingTmId=null;
+let tlType='成果';
+
+function renderYearTheme(){
+  const box=document.getElementById('theme-year-view');
+  const y=state.yearTheme;
+  if(!y){
+    box.innerHTML='<p class="hint">年間テーマを設定しましょう</p><button class="btn sub" id="btn-ty-edit">年間テーマを設定</button>';
+    document.getElementById('btn-ty-edit').onclick=()=>document.getElementById('theme-year-form').classList.remove('hide');
+    return;
+  }
+  box.innerHTML='<div class="theme-card"><div class="th-title">'+esc(y.title)+'</div>'+
+    (y.from||y.to?'<div class="th-sub">'+esc(y.from||'')+' 〜 '+esc(y.to||'')+'</div>':'')+
+    (y.purpose?'<div class="th-label">目的・ビジョン</div><div class="th-body">'+esc(y.purpose)+'</div>':'')+
+    '<div class="th-actions"><button id="btn-ty-edit2">編集</button><button class="del" id="btn-ty-del">削除</button></div></div>';
+  document.getElementById('btn-ty-edit2').onclick=()=>{
+    document.getElementById('ty-title').value=y.title||'';
+    document.getElementById('ty-purpose').value=y.purpose||'';
+    document.getElementById('ty-from').value=y.from||'';
+    document.getElementById('ty-to').value=y.to||'';
+    document.getElementById('theme-year-form').classList.remove('hide');
+  };
+  document.getElementById('btn-ty-del').onclick=()=>{
+    state.yearTheme=null;save();renderYearTheme();toast('削除しました');
+  };
+}
+document.getElementById('btn-ty-save').onclick=()=>{
+  const title=document.getElementById('ty-title').value.trim();
+  if(!title){toast('テーマを入力');return;}
+  state.yearTheme={title:title,purpose:document.getElementById('ty-purpose').value.trim(),from:document.getElementById('ty-from').value,to:document.getElementById('ty-to').value};
+  save();document.getElementById('theme-year-form').classList.add('hide');renderYearTheme();toast('保存しました');
+};
+document.getElementById('btn-ty-cancel').onclick=()=>document.getElementById('theme-year-form').classList.add('hide');
+
+function renderMonthThemes(){
+  const box=document.getElementById('theme-month-list');
+  const list=state.monthThemes.slice().sort((a,b)=>b.month.localeCompare(a.month));
+  if(!list.length){box.innerHTML='<p class="hint">月間テーマを追加して、今月の重点を明確にしましょう</p>';return;}
+  box.innerHTML=list.map(m=>{
+    const logs=(state.themeLogs||[]).filter(l=>l.month===m.month);
+    const achC=logs.filter(l=>l.type==='成果').length;
+    const issC=logs.filter(l=>l.type==='課題').length;
+    return '<div class="theme-card" data-id="'+m.id+'"><div class="th-title">'+esc(m.month)+' / '+esc(m.title)+'</div>'+
+      (achC||issC?'<div class="th-sub">成果'+achC+'件 / 課題'+issC+'件</div>':'')+
+      (m.purpose?'<div class="th-label">目的</div><div class="th-body">'+esc(m.purpose)+'</div>':'')+
+      (m.focus?'<div class="th-label">重点項目</div><div class="th-body">'+esc(m.focus)+'</div>':'')+
+      '<div class="th-actions"><button data-act="edit" data-id="'+m.id+'">編集</button><button class="del" data-act="del" data-id="'+m.id+'">削除</button></div></div>';
+  }).join('');
+  box.querySelectorAll('button[data-act="edit"]').forEach(b=>{
+    b.onclick=()=>{
+      const m=state.monthThemes.find(x=>x.id===b.dataset.id);if(!m)return;
+      editingTmId=m.id;
+      document.getElementById('tm-month').value=m.month||'';
+      document.getElementById('tm-title').value=m.title||'';
+      document.getElementById('tm-purpose').value=m.purpose||'';
+      document.getElementById('tm-focus').value=m.focus||'';
+      document.getElementById('theme-month-form').classList.remove('hide');
+    };
+  });
+  box.querySelectorAll('button[data-act="del"]').forEach(b=>{
+    b.onclick=()=>{state.monthThemes=state.monthThemes.filter(x=>x.id!==b.dataset.id);save();renderMonthThemes();toast('削除しました');};
+  });
+}
+document.getElementById('btn-tm-add').onclick=()=>{
+  editingTmId=null;const d=new Date();
+  document.getElementById('tm-month').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+  document.getElementById('tm-title').value='';document.getElementById('tm-purpose').value='';document.getElementById('tm-focus').value='';
+  document.getElementById('theme-month-form').classList.remove('hide');
+};
+document.getElementById('btn-tm-cancel').onclick=()=>{document.getElementById('theme-month-form').classList.add('hide');editingTmId=null;};
+document.getElementById('btn-tm-save').onclick=()=>{
+  const title=document.getElementById('tm-title').value.trim();if(!title){toast('テーマを入力');return;}
+  const m={id:editingTmId||'tm'+Date.now(),month:document.getElementById('tm-month').value,title:title,purpose:document.getElementById('tm-purpose').value.trim(),focus:document.getElementById('tm-focus').value.trim()};
+  if(editingTmId){const idx=state.monthThemes.findIndex(x=>x.id===editingTmId);if(idx>=0)state.monthThemes[idx]=m;}
+  else state.monthThemes.push(m);
+  save();document.getElementById('theme-month-form').classList.add('hide');editingTmId=null;
+  renderMonthThemes();updateTlMonthSelect();toast('保存しました');
+};
+
+// 振り返りログ
+document.querySelectorAll('#ch-tl-type .chip').forEach(ch=>{
+  ch.onclick=()=>{document.querySelectorAll('#ch-tl-type .chip').forEach(x=>x.classList.remove('on'));ch.classList.add('on');tlType=ch.dataset.v;};
+});
+function updateTlMonthSelect(){
+  const sel=document.getElementById('tl-month');
+  sel.innerHTML=state.monthThemes.slice().sort((a,b)=>b.month.localeCompare(a.month))
+    .map(m=>'<option value="'+m.month+'">'+esc(m.month)+' / '+esc(m.title)+'</option>').join('');
+}
+function renderThemeLogs(){
+  const box=document.getElementById('theme-log-list');
+  const list=(state.themeLogs||[]).slice().sort((a,b)=>b.t-a.t);
+  if(!list.length){box.innerHTML='<p class="hint">月間テーマへの振り返りや成果を記録しましょう</p>';return;}
+  box.innerHTML=list.map(l=>'<div class="theme-card"><span class="th-type '+esc(l.type)+'">'+esc(l.type)+'</span><span class="th-sub">'+esc(l.month)+'</span><div class="th-body" style="margin-top:4px">'+esc(l.body)+'</div><div class="th-actions"><button class="del" data-act="del-tl" data-id="'+l.id+'">削除</button></div></div>').join('');
+  box.querySelectorAll('button[data-act="del-tl"]').forEach(b=>{
+    b.onclick=()=>{state.themeLogs=state.themeLogs.filter(x=>x.id!==b.dataset.id);save();renderThemeLogs();renderMonthThemes();toast('削除しました');};
+  });
+}
+document.getElementById('btn-tl-add').onclick=()=>{
+  if(!state.monthThemes.length){toast('先に月間テーマを作成してください');return;}
+  updateTlMonthSelect();document.getElementById('tl-body').value='';
+  document.querySelectorAll('#ch-tl-type .chip').forEach(x=>x.classList.remove('on'));
+  document.querySelector('#ch-tl-type .chip[data-v="成果"]').classList.add('on');tlType='成果';
+  document.getElementById('theme-log-form').classList.remove('hide');
+};
+document.getElementById('btn-tl-cancel').onclick=()=>document.getElementById('theme-log-form').classList.add('hide');
+document.getElementById('btn-tl-save').onclick=()=>{
+  const body=document.getElementById('tl-body').value.trim();if(!body){toast('内容を入力');return;}
+  state.themeLogs.push({id:'tl'+Date.now(),month:document.getElementById('tl-month').value,type:tlType,body:body,t:Date.now()});
+  save();document.getElementById('theme-log-form').classList.add('hide');renderThemeLogs();renderMonthThemes();toast('記録しました');
+};
+document.getElementById('btn-theme-copy').onclick=()=>{
+  let out='';
+  if(state.yearTheme){const y=state.yearTheme;out+='🎯 年間テーマ: '+y.title+'\n';if(y.purpose)out+='   目的: '+y.purpose+'\n';if(y.from||y.to)out+='   期間: '+y.from+' 〜 '+y.to+'\n';out+='\n';}
+  if(state.monthThemes.length){out+='📅 月間テーマ\n';state.monthThemes.slice().sort((a,b)=>b.month.localeCompare(a.month)).forEach(m=>{out+='━━ '+m.month+' / '+m.title+'\n';if(m.purpose)out+='   目的: '+m.purpose+'\n';if(m.focus)out+='   重点: '+m.focus+'\n';const logs=(state.themeLogs||[]).filter(l=>l.month===m.month);logs.forEach(l=>out+='   ['+l.type+'] '+l.body+'\n');out+='\n';});}
+  if(!out){toast('テーマがありません');return;}
+  navigator.clipboard.writeText(out).then(()=>toast('コピーしました'));
+};
+renderYearTheme();renderMonthThemes();renderThemeLogs();
 
 // コード出力：10KB未満ならBase64で表示、以上なら警告
 document.getElementById('btn-code-out').onclick=()=>{
