@@ -103,6 +103,14 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
   padding:8px 10px;margin-top:8px}
 .pos-label{font-size:11px;font-weight:800;color:var(--accent);margin-bottom:4px}
 .pos-block .chip{padding:6px 10px;font-size:11px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;
+  display:flex;align-items:center;justify-content:center;padding:20px}
+.modal-inner{background:#fff;border:2px solid #1a1a1a;border-radius:14px;
+  padding:20px;max-width:360px;width:100%;box-shadow:4px 4px 0 #1a1a1a}
+.modal-title{font-size:18px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.modal-sub{font-size:12px;color:var(--mute);margin-bottom:12px}
+.modal-msg{font-size:14px;line-height:1.7;margin:0 0 14px}
+.modal-msg b{color:var(--accent);font-size:18px}
 </style>
 </head>
 <body>
@@ -127,6 +135,7 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
     <h2>セッション</h2>
     <div id="sess-current"></div>
     <button class="btn sub" id="btn-new-sess">新しいセッションを作成</button>
+    <button class="btn sub" id="btn-end-sess" style="margin-top:6px">このセッションを終了 / 保存</button>
     <div id="sess-form" class="hide" style="margin-top:10px">
       <label>日付</label>
       <input type="date" id="s-date">
@@ -349,7 +358,7 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
   <div class="card">
     <h2>このアプリについて</h2>
     <p class="hint">
-      プレーブック v2.3<br>
+      プレーブック v2.4<br>
       - チーム判断辞典 -<br>
       練習も試合も、失敗も成功も、チーム全員の判断を蓄積する<br>
       単一HTML・ローカル保存・PWA対応<br>
@@ -361,6 +370,18 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
 </main>
 
 <div class="toast" id="toast"></div>
+
+<div id="end-modal" class="modal hide">
+  <div class="modal-inner">
+    <div class="modal-title">🎯 お疲れさまでした！</div>
+    <div class="modal-sub" id="end-label"></div>
+    <p class="modal-msg"><b id="end-count">0</b>件のプレーを記録しました。<br>
+    データを守るためバックアップファイルを保存しますか？</p>
+    <button class="btn" id="btn-end-save">バックアップして終了</button>
+    <button class="btn sub" id="btn-end-skip" style="margin-top:8px">保存せず終了</button>
+    <button class="btn sub" id="btn-end-cancel" style="margin-top:8px">キャンセル</button>
+  </div>
+</div>
 
 <script>
 const STORE='sb_note_v2';
@@ -396,10 +417,28 @@ function load(){
 }
 function save(){localStorage.setItem(STORE,JSON.stringify(state))}
 
-function toast(msg){
+function toast(msg,ms){
   const t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('on');
-  setTimeout(()=>t.classList.remove('on'),2200);
+  setTimeout(()=>t.classList.remove('on'),ms||2200);
+}
+
+function exportJSON(){
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='playbook-'+Date.now()+'.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function showEndModal(){
+  const c=getCurrent();
+  if(!c){toast('セッション未選択');return;}
+  document.getElementById('end-count').textContent=c.plays.length;
+  document.getElementById('end-label').textContent=c.date+' / '+c.place;
+  document.getElementById('end-modal').classList.remove('hide');
 }
 
 document.querySelectorAll('.tabs button').forEach(b=>{
@@ -785,11 +824,24 @@ document.getElementById('btn-clear-key').onclick=()=>{
   toast('削除しました');
 };
 document.getElementById('btn-export').onclick=()=>{
-  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;a.download='softball-note-'+Date.now()+'.json';a.click();
-  URL.revokeObjectURL(url);toast('出力しました');
+  exportJSON();
+  toast('出力しました');
+};
+
+document.getElementById('btn-end-sess').onclick=showEndModal;
+document.getElementById('btn-end-save').onclick=()=>{
+  exportJSON();
+  document.getElementById('end-modal').classList.add('hide');
+  state.currentId=null;save();renderCurrent();
+  toast('保存して終了しました',2800);
+};
+document.getElementById('btn-end-skip').onclick=()=>{
+  document.getElementById('end-modal').classList.add('hide');
+  state.currentId=null;save();renderCurrent();
+  toast('セッションを終了しました');
+};
+document.getElementById('btn-end-cancel').onclick=()=>{
+  document.getElementById('end-modal').classList.add('hide');
 };
 document.getElementById('file-import').onchange=(e)=>{
   const f=e.target.files[0];if(!f)return;
