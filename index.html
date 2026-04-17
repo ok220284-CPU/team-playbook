@@ -346,16 +346,22 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
       </div>
       <p class="hint">技術的な成功/失敗ではなく「その状況でその選択は正しかったか」で評価</p>
 
-      <label>結果（任意・補足）</label>
-      <div class="chips" id="ch-result">
-        <span class="chip" data-v="成功">意図通り</span>
-        <span class="chip" data-v="部分成功">部分成功</span>
-        <span class="chip" data-v="失敗">失敗</span>
+      <label>③ なぜその判断をしたか</label>
+      <textarea id="p-reason" rows="2" placeholder="例) 捕手が二塁に投げると判断。三塁ランナーは動かないと見た"></textarea>
+
+      <label>意図通りだったか</label>
+      <div class="chips" id="ch-outcome">
+        <span class="chip" data-v="意図通り">意図通り</span>
+        <span class="chip" data-v="部分的">部分的</span>
+        <span class="chip" data-v="意図と違った">意図と違った</span>
       </div>
 
-      <label>この場面の考え方・次の準備</label>
-      <textarea id="p-memo" placeholder="例) 1死1,3塁で外野フライ。タッチアップ可の深さだったが判断遅れ。次回はフライ確認前に第二リードを深くとる。"></textarea>
-      <p class="hint">なぜその判断をしたか / 正解は何だったか / 次はどう備えるか</p>
+      <label>④ 次への学び・チーム基準</label>
+      <textarea id="p-lesson" rows="2" placeholder="例) この場面は三塁ランナー優先。次回は投手カットを基本とする"></textarea>
+      <p class="hint">チームルールとして辞典化すべき内容があればここに</p>
+
+      <label>補足メモ（任意）</label>
+      <textarea id="p-memo" rows="2" placeholder="その他の気づき・背景情報など"></textarea>
     </div>
 
     <div style="margin-top:12px">
@@ -561,7 +567,7 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
   <div class="card">
     <h2>このアプリについて</h2>
     <p class="hint">
-      プレーブック v3.2<br>
+      プレーブック v3.3<br>
       - チーム判断辞典 -<br>
       練習も試合も、失敗も成功も、チーム全員の判断を蓄積する<br>
       単一HTML・ローカル保存・PWA対応<br>
@@ -591,7 +597,7 @@ const STORE='sb_note_v2';
 const OLD_STORE='sb_note_v1';
 const KEY='sb_gemini_key';
 let state={sessions:[],currentId:null};
-let draft={side:null,out:null,run:null,play:null,intents:[],judge:null,result:null,posAction:{}};
+let draft={side:null,out:null,run:null,play:null,intents:[],judge:null,outcome:null,posAction:{}};
 
 function load(){
   try{
@@ -702,7 +708,7 @@ setupIntentChips('ch-off-intent');
 setupChips('ch-def-play','play');
 setupIntentChips('ch-def-intent');
 setupChips('ch-judge','judge');
-setupChips('ch-result','result');
+setupChips('ch-outcome','outcome');
 
 // ポジション別の選択肢定義
 const POS_CHOICES={
@@ -842,7 +848,10 @@ function renderLog(){
     const nums=['①','②','③','④','⑤'];
     const intentArr=p.intents||[p.intent].filter(Boolean);
     const intentStr=intentArr.length?intentArr.map((v,j)=>(intentArr.length>1?nums[j]:'')+esc(v)).join(' '):'—';
-    return '<div class="log '+jCls+'"><span class="x" data-i="'+realIdx+'">削除</span><div class="meta">'+esc(p.out)+'死 '+esc(runLabel(p.run))+(p.inning?' / '+esc(p.inning):'')+(p.score?' / '+esc(p.score):'')+'</div><span class="tag '+sideCls+'">'+sideLbl+'</span><span class="tag">'+esc(p.play||'-')+'</span><span class="tag">意図:'+intentStr+'</span><span class="tag '+jCls+'">'+jLbl+'</span>'+(p.result?'<span class="tag">'+esc(p.result)+'</span>':'')+posStr+(p.memo?'<div class="body">'+esc(p.memo)+'</div>':'')+'</div>';
+    const outcomeStr=p.outcome?'<span class="tag">'+esc(p.outcome)+'</span>':'';
+    const reasonStr=p.reason?'<div class="body"><b>③理由:</b> '+esc(p.reason)+'</div>':'';
+    const lessonStr=p.lesson?'<div class="body"><b>④学び:</b> '+esc(p.lesson)+'</div>':'';
+    return '<div class="log '+jCls+'"><span class="x" data-i="'+realIdx+'">削除</span><div class="meta">'+esc(p.out)+'死 '+esc(runLabel(p.run))+(p.inning?' / '+esc(p.inning):'')+(p.score?' / '+esc(p.score):'')+'</div><span class="tag '+sideCls+'">'+sideLbl+'</span><span class="tag">'+esc(p.play||'-')+'</span><span class="tag">意図:'+intentStr+'</span><span class="tag '+jCls+'">'+jLbl+'</span>'+outcomeStr+posStr+reasonStr+lessonStr+(p.memo?'<div class="body">'+esc(p.memo)+'</div>':'')+'</div>';
   }).join('');
   box.querySelectorAll('.x').forEach(x=>{
     x.onclick=()=>{
@@ -869,7 +878,9 @@ document.getElementById('btn-add-play').onclick=()=>{
   c.plays.push({
     side:draft.side,out:draft.out,run:draft.run,
     play:draft.play,intent:draft.intents[0]||'',intents:draft.intents.slice(),
-    judge:draft.judge,result:draft.result||'',
+    judge:draft.judge,outcome:draft.outcome||'',
+    reason:document.getElementById('p-reason').value||'',
+    lesson:document.getElementById('p-lesson').value||'',
     inning:document.getElementById('p-inning').value||'',
     score:document.getElementById('p-score').value||'',
     memo:document.getElementById('p-memo').value||'',
@@ -878,10 +889,12 @@ document.getElementById('btn-add-play').onclick=()=>{
   });
   save();
   document.querySelectorAll('#play-card .chip').forEach(x=>x.classList.remove('on'));
+  document.getElementById('p-reason').value='';
+  document.getElementById('p-lesson').value='';
   document.getElementById('p-memo').value='';
   document.getElementById('p-inning').value='';
   document.getElementById('p-score').value='';
-  draft={side:draft.side,out:null,run:null,play:null,intents:[],judge:null,result:null,posAction:{}};
+  draft={side:draft.side,out:null,run:null,play:null,intents:[],judge:null,outcome:null,posAction:{}};
   renderPosChoices();
   renderLog();
   toast('記録しました');
@@ -950,7 +963,10 @@ function ruleSummary(c){
     ok.forEach(x=>{
       out+=' ・['+(x.side==='off'?'攻':'守')+'] '+x.out+'死'+runLabel(x.run)+' '+x.play+'('+(x.intents||[x.intent]).filter(Boolean).map((v,j,a)=>(a.length>1?['①','②','③','④','⑤'][j]:'')+v).join(' ')+')\n';
       out+=fmtPos(x);
-      if(x.memo)out+='   -> '+x.memo+'\n';
+      if(x.reason)out+='   理由: '+x.reason+'\n';
+      if(x.outcome)out+='   結果: '+x.outcome+'\n';
+      if(x.lesson)out+='   学び: '+x.lesson+'\n';
+      if(x.memo)out+='   補足: '+x.memo+'\n';
     });
     out+='\n';
   }
@@ -961,7 +977,10 @@ function ruleSummary(c){
     ng.forEach(x=>{
       out+=' ・['+(x.side==='off'?'攻':'守')+'] '+x.out+'死'+runLabel(x.run)+' '+x.play+'('+(x.intents||[x.intent]).filter(Boolean).map((v,j,a)=>(a.length>1?['①','②','③','④','⑤'][j]:'')+v).join(' ')+')\n';
       out+=fmtPos(x);
-      if(x.memo)out+='   -> '+x.memo+'\n';
+      if(x.reason)out+='   理由: '+x.reason+'\n';
+      if(x.outcome)out+='   結果: '+x.outcome+'\n';
+      if(x.lesson)out+='   学び: '+x.lesson+'\n';
+      if(x.memo)out+='   補足: '+x.memo+'\n';
     });
     out+='\n';
   }
@@ -972,7 +991,10 @@ function ruleSummary(c){
     rv.forEach(x=>{
       out+=' ・['+(x.side==='off'?'攻':'守')+'] '+x.out+'死'+runLabel(x.run)+' '+x.play+'('+(x.intents||[x.intent]).filter(Boolean).map((v,j,a)=>(a.length>1?['①','②','③','④','⑤'][j]:'')+v).join(' ')+')\n';
       out+=fmtPos(x);
-      if(x.memo)out+='   -> '+x.memo+'\n';
+      if(x.reason)out+='   理由: '+x.reason+'\n';
+      if(x.outcome)out+='   結果: '+x.outcome+'\n';
+      if(x.lesson)out+='   学び: '+x.lesson+'\n';
+      if(x.memo)out+='   補足: '+x.memo+'\n';
     });
     out+='\n';
   }
