@@ -106,6 +106,13 @@ button.btn.sub{background:#fff;color:#1a1a1a;border:1.5px solid #1a1a1a}
 hr{border:none;border-top:1px solid var(--line);margin:12px 0}
 .hint{font-size:11px;color:var(--mute);margin:4px 0 0;line-height:1.5}
 .group{border-top:1px dashed var(--line);padding-top:10px;margin-top:10px}
+.wiz-step{animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.wiz-done{background:#f3f0ff;border:1px solid var(--accent);border-radius:8px;
+  padding:8px 12px;margin-bottom:10px;font-size:12px;font-weight:700;color:var(--accent);
+  cursor:pointer;position:relative}
+.wiz-done::after{content:'← 戻る';position:absolute;right:10px;top:8px;
+  font-size:10px;color:var(--mute);font-weight:400}
 #ch-def-pos .chip{min-width:42px;text-align:center;padding:8px 10px}
 .pos-block{background:#faf7ff;border:1px solid var(--line);border-radius:8px;
   padding:8px 10px;margin-top:8px}
@@ -227,22 +234,23 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
   <div class="card" id="play-card">
     <h2>プレー記録</h2>
 
-    <label>攻撃 / 守備</label>
-    <div class="seg" id="seg-side">
-      <button data-side="off">攻撃側</button>
-      <button data-side="def">守備側</button>
+    <div id="wiz-1" class="wiz-step">
+      <label>STEP1 攻撃 / 守備</label>
+      <div class="seg" id="seg-side">
+        <button data-side="off">攻撃側</button>
+        <button data-side="def">守備側</button>
+      </div>
     </div>
 
-    <div class="group">
-      <label>アウトカウント</label>
+    <div id="wiz-2" class="wiz-step hide">
+      <div id="wiz-1-summary" class="wiz-done"></div>
+      <label>STEP2 状況</label>
       <div class="chips" id="ch-out">
         <span class="chip" data-v="0">0 アウト</span>
         <span class="chip" data-v="1">1 アウト</span>
         <span class="chip" data-v="2">2 アウト</span>
       </div>
-
-      <label>ランナー</label>
-      <div class="chips" id="ch-run">
+      <div class="chips" id="ch-run" style="margin-top:6px">
         <span class="chip" data-v="---">なし</span>
         <span class="chip" data-v="1--">1塁</span>
         <span class="chip" data-v="-2-">2塁</span>
@@ -252,102 +260,99 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
         <span class="chip" data-v="-23">2,3塁</span>
         <span class="chip" data-v="123">満塁</span>
       </div>
-
-      <label>イニング・点差（任意）</label>
-      <div class="row">
-        <input type="text" id="p-inning" placeholder="例: 6回裏">
-        <input type="text" id="p-score" placeholder="例: 2点ビハインド">
+      <div class="row" style="margin-top:6px">
+        <input type="text" id="p-inning" placeholder="イニング（任意）">
+        <input type="text" id="p-score" placeholder="点差（任意）">
       </div>
+      <button class="btn" id="btn-wiz2-next" style="margin-top:8px">次へ →</button>
     </div>
 
-    <div class="group" id="grp-off">
-      <label>プレー種別（攻撃）</label>
-      <div class="chips" id="ch-off-play">
-        <span class="chip" data-v="通常打撃">通常打撃</span>
-        <span class="chip" data-v="進塁打狙い">進塁打狙い</span>
-        <span class="chip" data-v="犠打バント">犠打バント</span>
-        <span class="chip" data-v="セーフティ">セーフティ</span>
-        <span class="chip" data-v="プッシュバント">プッシュバント</span>
-        <span class="chip" data-v="スクイズ">スクイズ</span>
-        <span class="chip" data-v="セーフティスクイズ">セーフティスクイズ</span>
-        <span class="chip" data-v="バスター">バスター</span>
-        <span class="chip" data-v="スラップ">スラップ</span>
-        <span class="chip" data-v="ヒットエンドラン">H&amp;R</span>
-        <span class="chip" data-v="ランエンドヒット">R&amp;H</span>
-        <span class="chip" data-v="盗塁">盗塁</span>
-        <span class="chip" data-v="ディレードスチール">ディレード</span>
-        <span class="chip" data-v="ギャンブルスタート">ギャンブル</span>
-        <span class="chip" data-v="タッチアップ">タッチアップ</span>
-        <span class="chip" data-v="第二リード">第二リード</span>
-        <span class="chip" data-v="帰塁判断">帰塁判断</span>
+    <div id="wiz-3" class="wiz-step hide">
+      <div id="wiz-2-summary" class="wiz-done"></div>
+      <div id="grp-off">
+        <label>STEP3 何をした / 何を狙った</label>
+        <div class="chips" id="ch-off-play">
+          <span class="chip" data-v="通常打撃">通常打撃</span>
+          <span class="chip" data-v="進塁打狙い">進塁打狙い</span>
+          <span class="chip" data-v="犠打バント">犠打バント</span>
+          <span class="chip" data-v="セーフティ">セーフティ</span>
+          <span class="chip" data-v="プッシュバント">プッシュバント</span>
+          <span class="chip" data-v="スクイズ">スクイズ</span>
+          <span class="chip" data-v="セーフティスクイズ">セーフティスクイズ</span>
+          <span class="chip" data-v="バスター">バスター</span>
+          <span class="chip" data-v="スラップ">スラップ</span>
+          <span class="chip" data-v="ヒットエンドラン">H&amp;R</span>
+          <span class="chip" data-v="ランエンドヒット">R&amp;H</span>
+          <span class="chip" data-v="盗塁">盗塁</span>
+          <span class="chip" data-v="ディレードスチール">ディレード</span>
+          <span class="chip" data-v="ギャンブルスタート">ギャンブル</span>
+          <span class="chip" data-v="タッチアップ">タッチアップ</span>
+          <span class="chip" data-v="第二リード">第二リード</span>
+          <span class="chip" data-v="帰塁判断">帰塁判断</span>
+        </div>
+        <label>意図・優先順位（タップ順が①②③）</label>
+        <div class="chips" id="ch-off-intent">
+          <span class="chip" data-v="進塁">進塁</span>
+          <span class="chip" data-v="得点">得点</span>
+          <span class="chip" data-v="出塁">出塁</span>
+          <span class="chip" data-v="かく乱">かく乱</span>
+          <span class="chip" data-v="時間稼ぎ">時間稼ぎ</span>
+        </div>
       </div>
-
-      <label>意図・優先順位（タップ順が①②③）</label>
-      <div class="chips" id="ch-off-intent">
-        <span class="chip" data-v="進塁">進塁</span>
-        <span class="chip" data-v="得点">得点</span>
-        <span class="chip" data-v="出塁">出塁</span>
-        <span class="chip" data-v="かく乱">かく乱</span>
-        <span class="chip" data-v="時間稼ぎ">時間稼ぎ</span>
+      <div id="grp-def" class="hide">
+        <label>STEP3 何をした / 何を狙った</label>
+        <div class="chips" id="ch-def-play">
+          <span class="chip" data-v="守備位置選択">守備位置選択</span>
+          <span class="chip" data-v="前進守備">前進守備</span>
+          <span class="chip" data-v="後退守備">後退守備</span>
+          <span class="chip" data-v="中間守備">中間守備</span>
+          <span class="chip" data-v="ゲッツー態勢">ゲッツー態勢</span>
+          <span class="chip" data-v="送球判断">送球判断</span>
+          <span class="chip" data-v="中継カット">中継・カット</span>
+          <span class="chip" data-v="バックアップ">バックアップ</span>
+          <span class="chip" data-v="ベースカバー">ベースカバー</span>
+          <span class="chip" data-v="挟殺">挟殺プレー</span>
+          <span class="chip" data-v="牽制">牽制</span>
+          <span class="chip" data-v="連携プレー">連携プレー</span>
+          <span class="chip" data-v="配球">配球</span>
+          <span class="chip" data-v="バント処理">バント処理</span>
+          <span class="chip" data-v="スクイズ対応">スクイズ対応</span>
+          <span class="chip" data-v="タッチプレー">タッチプレー</span>
+        </div>
+        <label>意図・優先順位（タップ順が①②③）</label>
+        <div class="chips" id="ch-def-intent">
+          <span class="chip" data-v="失点阻止">失点阻止</span>
+          <span class="chip" data-v="最小失点">最小失点</span>
+          <span class="chip" data-v="確実にアウト1個">確実にアウト1個</span>
+          <span class="chip" data-v="ゲッツー">ゲッツー</span>
+          <span class="chip" data-v="進塁阻止">進塁阻止</span>
+        </div>
+        <label>関与ポジション（任意・複数選択可）</label>
+        <div class="chips" id="ch-def-pos">
+          <span class="chip" data-v="投">投</span>
+          <span class="chip" data-v="捕">捕</span>
+          <span class="chip" data-v="一">一</span>
+          <span class="chip" data-v="二">二</span>
+          <span class="chip" data-v="三">三</span>
+          <span class="chip" data-v="遊">遊</span>
+          <span class="chip" data-v="左">左</span>
+          <span class="chip" data-v="中">中</span>
+          <span class="chip" data-v="右">右</span>
+        </div>
+        <div id="pos-choices"></div>
       </div>
+      <button class="btn" id="btn-wiz3-next" style="margin-top:8px">次へ →</button>
     </div>
 
-    <div class="group hide" id="grp-def">
-      <label>プレー種別（守備）</label>
-      <div class="chips" id="ch-def-play">
-        <span class="chip" data-v="守備位置選択">守備位置選択</span>
-        <span class="chip" data-v="前進守備">前進守備</span>
-        <span class="chip" data-v="後退守備">後退守備</span>
-        <span class="chip" data-v="中間守備">中間守備</span>
-        <span class="chip" data-v="ゲッツー態勢">ゲッツー態勢</span>
-        <span class="chip" data-v="送球判断">送球判断</span>
-        <span class="chip" data-v="中継カット">中継・カット</span>
-        <span class="chip" data-v="バックアップ">バックアップ</span>
-        <span class="chip" data-v="ベースカバー">ベースカバー</span>
-        <span class="chip" data-v="挟殺">挟殺プレー</span>
-        <span class="chip" data-v="牽制">牽制</span>
-        <span class="chip" data-v="連携プレー">連携プレー</span>
-        <span class="chip" data-v="配球">配球</span>
-        <span class="chip" data-v="バント処理">バント処理</span>
-        <span class="chip" data-v="スクイズ対応">スクイズ対応</span>
-        <span class="chip" data-v="タッチプレー">タッチプレー</span>
-      </div>
-
-      <label>意図・優先順位（タップ順が①②③）</label>
-      <div class="chips" id="ch-def-intent">
-        <span class="chip" data-v="失点阻止">失点阻止</span>
-        <span class="chip" data-v="最小失点">最小失点</span>
-        <span class="chip" data-v="確実にアウト1個">確実にアウト1個</span>
-        <span class="chip" data-v="ゲッツー">ゲッツー</span>
-        <span class="chip" data-v="進塁阻止">進塁阻止</span>
-      </div>
-
-      <label>関与ポジション（複数選択可）</label>
-      <div class="chips" id="ch-def-pos">
-        <span class="chip" data-v="投">投</span>
-        <span class="chip" data-v="捕">捕</span>
-        <span class="chip" data-v="一">一</span>
-        <span class="chip" data-v="二">二</span>
-        <span class="chip" data-v="三">三</span>
-        <span class="chip" data-v="遊">遊</span>
-        <span class="chip" data-v="左">左</span>
-        <span class="chip" data-v="中">中</span>
-        <span class="chip" data-v="右">右</span>
-      </div>
-      <div id="pos-choices"></div>
-    </div>
-
-    <div class="group">
-      <label>判断の評価 ★最重要</label>
+    <div id="wiz-4" class="wiz-step hide">
+      <div id="wiz-3-summary" class="wiz-done"></div>
+      <label>STEP4 判断の評価</label>
       <div class="chips" id="ch-judge">
         <span class="chip ok" data-v="correct">判断正解</span>
         <span class="chip warn" data-v="review">要検討</span>
         <span class="chip ng" data-v="mistake">判断ミス</span>
       </div>
-      <p class="hint">技術的な成功/失敗ではなく「その状況でその選択は正しかったか」で評価</p>
-
-      <label>③ なぜその判断をしたか</label>
-      <textarea id="p-reason" rows="2" placeholder="例) 捕手が二塁に投げると判断。三塁ランナーは動かないと見た"></textarea>
+      <p class="hint">技術的な成功/失敗ではなく「その選択は正しかったか」</p>
 
       <label>意図通りだったか</label>
       <div class="chips" id="ch-outcome">
@@ -356,16 +361,16 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
         <span class="chip" data-v="意図と違った">意図と違った</span>
       </div>
 
-      <label>④ 次への学び・チーム基準</label>
-      <textarea id="p-lesson" rows="2" placeholder="例) この場面は三塁ランナー優先。次回は投手カットを基本とする"></textarea>
-      <p class="hint">チームルールとして辞典化すべき内容があればここに</p>
+      <label>なぜその判断をしたか（任意）</label>
+      <textarea id="p-reason" rows="2" placeholder="例) 三塁ランナーが動かないと見て二塁送球した"></textarea>
+
+      <label>次への学び（任意）</label>
+      <textarea id="p-lesson" rows="2" placeholder="例) この場面は三塁ランナー優先。投手カットを基本に"></textarea>
 
       <label>補足メモ（任意）</label>
-      <textarea id="p-memo" rows="2" placeholder="その他の気づき・背景情報など"></textarea>
-    </div>
+      <textarea id="p-memo" rows="2" placeholder="その他の気づきなど"></textarea>
 
-    <div style="margin-top:12px">
-      <button class="btn" id="btn-add-play">このプレーを記録</button>
+      <button class="btn" id="btn-add-play" style="margin-top:10px">このプレーを記録</button>
     </div>
   </div>
 
@@ -567,7 +572,7 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
   <div class="card">
     <h2>このアプリについて</h2>
     <p class="hint">
-      プレーブック v3.3<br>
+      プレーブック v3.4<br>
       - チーム判断辞典 -<br>
       練習も試合も、失敗も成功も、チーム全員の判断を蓄積する<br>
       単一HTML・ローカル保存・PWA対応<br>
@@ -759,6 +764,21 @@ function renderPosChoices(){
   });
 }
 
+// ウィザード遷移
+function wizShow(step){
+  [1,2,3,4].forEach(n=>document.getElementById('wiz-'+n).classList.toggle('hide',n!==step));
+}
+function wizReset(){
+  wizShow(1);
+  document.querySelectorAll('#play-card .chip').forEach(x=>{x.classList.remove('on');x.removeAttribute('data-order');});
+  document.querySelectorAll('#seg-side button').forEach(x=>x.classList.remove('on'));
+  document.getElementById('p-inning').value='';document.getElementById('p-score').value='';
+  document.getElementById('p-reason').value='';document.getElementById('p-lesson').value='';
+  document.getElementById('p-memo').value='';
+  draft={side:null,out:null,run:null,play:null,intents:[],judge:null,outcome:null,posAction:{}};
+  renderPosChoices();
+}
+
 document.querySelectorAll('#seg-side button').forEach(b=>{
   b.onclick=()=>{
     document.querySelectorAll('#seg-side button').forEach(x=>x.classList.remove('on'));
@@ -768,12 +788,39 @@ document.querySelectorAll('#seg-side button').forEach(b=>{
     document.getElementById('grp-def').classList.toggle('hide',b.dataset.side!=='def');
     ['ch-off-play','ch-off-intent','ch-def-play','ch-def-intent','ch-def-pos'].forEach(id=>{
       const el=document.getElementById(id);
-      if(el)el.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
+      if(el)el.querySelectorAll('.chip').forEach(x=>{x.classList.remove('on');x.removeAttribute('data-order');});
     });
     draft.play=null;draft.intents=[];draft.posAction={};
     renderPosChoices();
+    document.getElementById('wiz-1-summary').textContent=(b.dataset.side==='off'?'攻撃側':'守備側');
+    wizShow(2);
   };
 });
+
+// Step2→3
+document.getElementById('btn-wiz2-next').onclick=()=>{
+  if(draft.out===null||!draft.run){toast('アウトとランナーを選択');return;}
+  document.getElementById('wiz-2-summary').textContent=
+    (draft.side==='off'?'攻撃':'守備')+' / '+draft.out+'死 '+runLabel(draft.run)
+    +(document.getElementById('p-inning').value?' / '+document.getElementById('p-inning').value:'')
+    +(document.getElementById('p-score').value?' / '+document.getElementById('p-score').value:'');
+  wizShow(3);
+};
+
+// Step3→4
+document.getElementById('btn-wiz3-next').onclick=()=>{
+  if(!draft.play||!draft.intents.length){toast('プレー種別と意図を選択');return;}
+  const nums=['①','②','③','④','⑤'];
+  const intentStr=draft.intents.map((v,i)=>(draft.intents.length>1?nums[i]:'')+v).join(' ');
+  document.getElementById('wiz-3-summary').textContent=
+    draft.out+'死 '+runLabel(draft.run)+' / '+draft.play+' ('+intentStr+')';
+  wizShow(4);
+};
+
+// サマリークリックで戻る
+document.getElementById('wiz-1-summary').onclick=()=>{wizReset();};
+document.getElementById('wiz-2-summary').onclick=()=>{wizShow(2);};
+document.getElementById('wiz-3-summary').onclick=()=>{wizShow(3);};
 
 document.getElementById('btn-new-sess').onclick=()=>{
   document.getElementById('sess-form').classList.remove('hide');
@@ -889,13 +936,7 @@ document.getElementById('btn-add-play').onclick=()=>{
   });
   save();
   document.querySelectorAll('#play-card .chip').forEach(x=>x.classList.remove('on'));
-  document.getElementById('p-reason').value='';
-  document.getElementById('p-lesson').value='';
-  document.getElementById('p-memo').value='';
-  document.getElementById('p-inning').value='';
-  document.getElementById('p-score').value='';
-  draft={side:draft.side,out:null,run:null,play:null,intents:[],judge:null,outcome:null,posAction:{}};
-  renderPosChoices();
+  wizReset();
   renderLog();
   toast('記録しました');
 };
@@ -1572,7 +1613,7 @@ document.getElementById('btn-reset').onclick=()=>{
 load();
 const sk=localStorage.getItem(KEY);
 if(sk)document.getElementById('api-key').value=sk;
-document.querySelector('#seg-side button[data-side="off"]').click();
+// ウィザードはStep1から開始（side自動選択しない）
 renderCurrent();
 </script>
 
