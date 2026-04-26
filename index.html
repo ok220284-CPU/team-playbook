@@ -1,0 +1,1621 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#1a0a2e">
+<link rel="apple-touch-icon" href="data:image/png;base64,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">
+<link rel="icon" type="image/png" href="data:image/png;base64,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">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22PlayBook%22%2C%22short_name%22%3A%22PlayBook%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%231a0a2e%22%2C%22theme_color%22%3A%22%231a0a2e%22%7D">
+<title>プレーブック - チーム判断辞典</title>
+<style>
+:root{
+  --bg:#fafafa;--bg2:#ffffff;--fg:#1a1a1a;--accent:#7b3fd4;--accent2:#9d5ff5;
+  --mute:#666666;--card:#ffffff;--line:#e0e0e0;
+  --ok:#1e8e3e;--warn:#c77700;--ng:#c62828;
+  --off:#1565c0;--def:#7b1fa2;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);
+  font-family:-apple-system,"Hiragino Sans","Yu Gothic",sans-serif;
+  font-size:15px;line-height:1.6;overscroll-behavior:none}
+body{padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+header{position:sticky;top:0;background:#1a1a1a;border-bottom:3px solid var(--accent);
+  padding:10px 16px;z-index:10}
+header h1{margin:0;font-size:16px;font-weight:800;letter-spacing:.02em;color:#fff}
+header .sub{font-size:10px;color:#a99bc2;display:block;font-weight:400;margin-top:2px}
+.tabs{display:flex;background:#1a1a1a;border-bottom:1px solid #000;
+  position:sticky;top:50px;z-index:9}
+.tabs button{flex:1;background:none;border:none;color:#a99bc2;padding:12px 2px;
+  font-size:12px;font-weight:700;border-bottom:2px solid transparent;cursor:pointer}
+.tabs button.active{color:#fff;border-bottom-color:var(--accent)}
+main{padding:12px 12px 80px;max-width:640px;margin:0 auto}
+.card{background:var(--card);border:1.5px solid #1a1a1a;border-radius:12px;
+  padding:14px;margin-bottom:12px;box-shadow:2px 2px 0 #1a1a1a}
+.card h2{margin:0 0 10px;font-size:14px;color:#1a1a1a;
+  border-left:4px solid var(--accent);padding-left:8px}
+label{display:block;font-size:12px;color:var(--mute);margin:10px 0 4px;font-weight:700}
+input,select,textarea{width:100%;background:#fff;border:1.5px solid #1a1a1a;
+  color:var(--fg);padding:10px;border-radius:8px;font-size:15px;font-family:inherit}
+textarea{resize:vertical;min-height:70px}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:0}
+button.btn{background:#1a1a1a;color:#fff;border:none;padding:12px;
+  border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;width:100%}
+button.btn:active{opacity:.7}
+button.btn.sub{background:#fff;color:#1a1a1a;border:1.5px solid #1a1a1a}
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row>*{flex:1}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:2px 0}
+.chip{background:#fff;border:1.5px solid #1a1a1a;color:#1a1a1a;
+  padding:8px 12px;border-radius:20px;font-size:12px;cursor:pointer;font-weight:600}
+.chip.on{background:#1a1a1a;color:#fff;border-color:#1a1a1a}
+.chip.ok.on{background:var(--ok);color:#fff;border-color:var(--ok)}
+.chip.warn.on{background:var(--warn);color:#fff;border-color:var(--warn)}
+.chip.ng.on{background:var(--ng);color:#fff;border-color:var(--ng)}
+.chip[data-order]::before{content:'①';position:relative;margin-right:2px;font-size:11px;font-weight:900}
+.chip[data-order="2"]::before{content:'②'}
+.chip[data-order="3"]::before{content:'③'}
+.chip[data-order="4"]::before{content:'④'}
+.chip[data-order="5"]::before{content:'⑤'}
+.seg{display:flex;background:#1a1a1a;border-radius:8px;padding:3px;margin:4px 0}
+.seg button{flex:1;background:none;border:none;color:#a99bc2;padding:10px;
+  border-radius:6px;font-size:13px;font-weight:700;cursor:pointer}
+.seg button.on[data-side="off"]{background:var(--off);color:#fff}
+.seg button.on[data-side="def"]{background:var(--def);color:#fff}
+.seg button.on[data-type="practice"]{background:#fff;color:#1a1a1a}
+.seg button.on[data-type="game"]{background:var(--accent);color:#fff}
+.type-badge{display:inline-block;padding:2px 8px;border-radius:10px;
+  font-size:10px;font-weight:700;margin-left:6px}
+.type-badge.practice{background:#1a1a1a;color:#fff}
+.type-badge.game{background:var(--accent);color:#fff}
+.log{background:#fff;border-left:5px solid #1a1a1a;padding:10px 12px;
+  border-radius:6px;margin-bottom:8px;font-size:13px;position:relative;
+  border-top:1px solid #1a1a1a;border-right:1px solid #1a1a1a;border-bottom:1px solid #1a1a1a}
+.log.ok{border-left-color:var(--ok)}
+.log.warn{border-left-color:var(--warn)}
+.log.ng{border-left-color:var(--ng)}
+.log .meta{color:var(--mute);font-size:11px;margin-bottom:4px}
+.log .tag{display:inline-block;background:#ede4ff;color:var(--accent);padding:2px 8px;
+  border-radius:10px;font-size:10px;margin-right:4px;font-weight:700}
+.log .tag.off{background:#e3f2fd;color:var(--off)}
+.log .tag.def{background:#f3e5f5;color:var(--def)}
+.log .tag.ok{background:#e8f5e9;color:var(--ok)}
+.log .tag.warn{background:#fff4e0;color:var(--warn)}
+.log .tag.ng{background:#ffebee;color:var(--ng)}
+.log .x{position:absolute;right:8px;top:6px;color:var(--ng);cursor:pointer;
+  padding:4px 8px;font-weight:700;font-size:11px}
+.log .body{margin-top:6px;white-space:pre-wrap}
+.summary{white-space:pre-wrap;background:#fff;padding:12px;border-radius:8px;
+  font-size:13px;line-height:1.7;border:1.5px solid #1a1a1a}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);
+  background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:24px;
+  font-weight:700;font-size:13px;z-index:100;box-shadow:0 4px 12px rgba(0,0,0,.3);
+  opacity:0;transition:opacity .3s;pointer-events:none;max-width:90%}
+.toast.on{opacity:1}
+.hide{display:none !important}
+.session-card{background:#fff;border:1.5px solid #1a1a1a;padding:12px;
+  border-radius:10px;margin-bottom:8px;cursor:pointer}
+.session-card.active{border-color:var(--accent);box-shadow:3px 3px 0 var(--accent)}
+.session-card .t{font-weight:700;font-size:14px}
+.session-card .s{color:var(--mute);font-size:11px;margin-top:2px}
+.count-badge{display:inline-block;background:#1a1a1a;color:#fff;
+  padding:1px 8px;border-radius:10px;font-size:11px;margin-left:6px}
+hr{border:none;border-top:1px solid var(--line);margin:12px 0}
+.hint{font-size:11px;color:var(--mute);margin:4px 0 0;line-height:1.5}
+.group{border-top:1px dashed var(--line);padding-top:10px;margin-top:10px}
+.wiz-step{animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.wiz-done{background:#f3f0ff;border:1px solid var(--accent);border-radius:8px;
+  padding:8px 12px;margin-bottom:10px;font-size:12px;font-weight:700;color:var(--accent);
+  cursor:pointer;position:relative}
+.wiz-done::after{content:'← 戻る';position:absolute;right:10px;top:8px;
+  font-size:10px;color:var(--mute);font-weight:400}
+#ch-def-pos .chip{min-width:42px;text-align:center;padding:8px 10px}
+.pos-block{background:#faf7ff;border:1px solid var(--line);border-radius:8px;
+  padding:8px 10px;margin-top:8px}
+.pos-label{font-size:11px;font-weight:800;color:var(--accent);margin-bottom:4px}
+.pos-block .chip{padding:6px 10px;font-size:11px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;
+  display:flex;align-items:center;justify-content:center;padding:20px}
+.modal-inner{background:#fff;border:2px solid #1a1a1a;border-radius:14px;
+  padding:20px;max-width:360px;width:100%;box-shadow:4px 4px 0 #1a1a1a}
+.modal-title{font-size:18px;font-weight:800;color:#1a1a1a;margin-bottom:4px}
+.modal-sub{font-size:12px;color:var(--mute);margin-bottom:12px}
+.modal-msg{font-size:14px;line-height:1.7;margin:0 0 14px}
+.modal-msg b{color:var(--accent);font-size:18px}
+.imp-play{background:#faf7ff;border:1.5px solid var(--line);border-radius:10px;
+  padding:10px;margin-bottom:10px;position:relative}
+.imp-play .imp-num{position:absolute;right:8px;top:6px;background:var(--accent);
+  color:#fff;font-size:11px;padding:2px 8px;border-radius:10px;font-weight:700}
+.imp-play .imp-del{position:absolute;right:8px;top:32px;color:var(--ng);
+  font-size:11px;font-weight:700;cursor:pointer;padding:2px 6px}
+.imp-row{display:flex;gap:6px;margin:6px 0;flex-wrap:wrap}
+.imp-row select,.imp-row input{flex:1;min-width:80px;padding:6px 8px;font-size:12px}
+.imp-row textarea{font-size:12px;min-height:50px}
+.imp-lbl{font-size:10px;color:var(--mute);font-weight:700;margin-right:4px;align-self:center}
+.imp-play .judge-seg{display:flex;gap:4px;margin:6px 0}
+.imp-play .judge-seg button{flex:1;padding:6px;font-size:11px;font-weight:700;
+  border-radius:6px;border:1.5px solid var(--line);background:#fff;cursor:pointer}
+.imp-play .judge-seg button.on.ok{background:var(--ok);color:#fff;border-color:var(--ok)}
+.imp-play .judge-seg button.on.warn{background:var(--warn);color:#fff;border-color:var(--warn)}
+.imp-play .judge-seg button.on.ng{background:var(--ng);color:#fff;border-color:var(--ng)}
+.rule-card{background:#fff;border:1.5px solid #1a1a1a;border-radius:10px;
+  padding:12px;margin-bottom:8px;position:relative;box-shadow:2px 2px 0 #1a1a1a}
+.rule-card .rule-title{font-weight:800;font-size:14px;color:#1a1a1a;margin-bottom:6px;
+  padding-right:60px}
+.rule-card .rule-cat{position:absolute;right:8px;top:10px;font-size:10px;
+  padding:2px 8px;border-radius:10px;font-weight:700}
+.rule-card .rule-cat.off{background:#e3f2fd;color:var(--off)}
+.rule-card .rule-cat.def{background:#f3e5f5;color:var(--def)}
+.rule-card .rule-sit{font-size:12px;color:var(--mute);margin-bottom:6px}
+.rule-card .rule-body{font-size:13px;line-height:1.7;white-space:pre-wrap}
+.rule-card .rule-label{font-size:10px;font-weight:800;color:var(--accent);margin-top:8px}
+.rule-card .rule-actions{display:flex;gap:6px;margin-top:8px;justify-content:flex-end}
+.rule-card .rule-actions button{font-size:11px;padding:4px 10px;border-radius:6px;
+  border:1px solid var(--line);background:#fff;font-weight:700;cursor:pointer}
+.rule-card .rule-actions button.del{color:var(--ng);border-color:var(--ng)}
+.theme-card{background:#fff;border:1.5px solid #1a1a1a;border-radius:10px;
+  padding:12px;margin-bottom:8px;position:relative;box-shadow:2px 2px 0 #1a1a1a}
+.theme-card .th-title{font-weight:800;font-size:15px;margin-bottom:4px}
+.theme-card .th-sub{font-size:12px;color:var(--mute);margin-bottom:4px}
+.theme-card .th-body{font-size:13px;line-height:1.7;white-space:pre-wrap;margin-top:6px}
+.theme-card .th-label{font-size:10px;font-weight:800;color:var(--accent);margin-top:8px}
+.theme-card .th-actions{display:flex;gap:6px;margin-top:8px;justify-content:flex-end}
+.theme-card .th-actions button{font-size:11px;padding:4px 10px;border-radius:6px;
+  border:1px solid var(--line);background:#fff;font-weight:700;cursor:pointer}
+.theme-card .th-actions button.del{color:var(--ng);border-color:var(--ng)}
+.th-type{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;
+  font-weight:700;margin-right:4px}
+.th-type.成果{background:#e8f5e9;color:var(--ok)}
+.th-type.課題{background:#ffebee;color:var(--ng)}
+.th-type.気づき{background:#e3f2fd;color:var(--off)}
+.th-type.方針変更{background:#f3e5f5;color:var(--def)}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>プレーブック
+    <span class="sub">- チーム判断辞典 - 失敗の数が成長の数 -</span>
+  </h1>
+</header>
+
+<nav class="tabs">
+  <button data-tab="rec" class="active">記録</button>
+  <button data-tab="imp">取込</button>
+  <button data-tab="theme">テーマ</button>
+  <button data-tab="hist">履歴</button>
+  <button data-tab="sum">まとめ</button>
+  <button data-tab="set">設定</button>
+</nav>
+
+<main>
+
+<section id="tab-rec">
+  <div class="card">
+    <h2>セッション</h2>
+    <div id="sess-current"></div>
+    <button class="btn sub" id="btn-new-sess">新しいセッションを作成</button>
+    <button class="btn sub" id="btn-end-sess" style="margin-top:6px">このセッションを終了 / 保存</button>
+    <div id="sess-form" class="hide" style="margin-top:10px">
+      <label>日付</label>
+      <input type="date" id="s-date">
+      <label>場所</label>
+      <input type="text" id="s-place" placeholder="例: 市民球場">
+      <label>区分</label>
+      <div class="seg" id="seg-type">
+        <button data-type="practice" class="on">練習</button>
+        <button data-type="game">試合</button>
+      </div>
+      <label>種別</label>
+      <select id="s-kind">
+        <option>ケースバッティング</option>
+        <option>実戦形式</option>
+        <option>走塁練習</option>
+        <option>守備連携</option>
+        <option>シート打撃</option>
+        <option>紅白戦</option>
+        <option>公式戦</option>
+        <option>練習試合</option>
+        <option>その他</option>
+      </select>
+      <label>テーマ・対戦相手など</label>
+      <input type="text" id="s-note" placeholder="例: 1死1,3塁の判断 / vs 〇〇チーム">
+      <div class="row" style="margin-top:10px">
+        <button class="btn" id="s-save">作成</button>
+        <button class="btn sub" id="s-cancel">キャンセル</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" id="play-card">
+    <h2>プレー記録</h2>
+
+    <div id="wiz-1" class="wiz-step">
+      <label>STEP1 攻撃 / 守備</label>
+      <div class="seg" id="seg-side">
+        <button data-side="off">攻撃側</button>
+        <button data-side="def">守備側</button>
+      </div>
+    </div>
+
+    <div id="wiz-2" class="wiz-step hide">
+      <div id="wiz-1-summary" class="wiz-done"></div>
+      <label>STEP2 状況</label>
+      <div class="chips" id="ch-out">
+        <span class="chip" data-v="0">0 アウト</span>
+        <span class="chip" data-v="1">1 アウト</span>
+        <span class="chip" data-v="2">2 アウト</span>
+      </div>
+      <div class="chips" id="ch-run" style="margin-top:6px">
+        <span class="chip" data-v="---">なし</span>
+        <span class="chip" data-v="1--">1塁</span>
+        <span class="chip" data-v="-2-">2塁</span>
+        <span class="chip" data-v="--3">3塁</span>
+        <span class="chip" data-v="12-">1,2塁</span>
+        <span class="chip" data-v="1-3">1,3塁</span>
+        <span class="chip" data-v="-23">2,3塁</span>
+        <span class="chip" data-v="123">満塁</span>
+      </div>
+      <div class="row" style="margin-top:6px">
+        <input type="text" id="p-inning" placeholder="イニング（任意）">
+        <input type="text" id="p-score" placeholder="点差（任意）">
+      </div>
+      <button class="btn" id="btn-wiz2-next" style="margin-top:8px">次へ →</button>
+    </div>
+
+    <div id="wiz-3" class="wiz-step hide">
+      <div id="wiz-2-summary" class="wiz-done"></div>
+      <div id="grp-off">
+        <label>STEP3 何をした / 何を狙った</label>
+        <div class="chips" id="ch-off-play">
+          <span class="chip" data-v="通常打撃">通常打撃</span>
+          <span class="chip" data-v="進塁打狙い">進塁打狙い</span>
+          <span class="chip" data-v="犠打バント">犠打バント</span>
+          <span class="chip" data-v="セーフティ">セーフティ</span>
+          <span class="chip" data-v="プッシュバント">プッシュバント</span>
+          <span class="chip" data-v="スクイズ">スクイズ</span>
+          <span class="chip" data-v="セーフティスクイズ">セーフティスクイズ</span>
+          <span class="chip" data-v="バスター">バスター</span>
+          <span class="chip" data-v="スラップ">スラップ</span>
+          <span class="chip" data-v="ヒットエンドラン">H&amp;R</span>
+          <span class="chip" data-v="ランエンドヒット">R&amp;H</span>
+          <span class="chip" data-v="盗塁">盗塁</span>
+          <span class="chip" data-v="ディレードスチール">ディレード</span>
+          <span class="chip" data-v="ギャンブルスタート">ギャンブル</span>
+          <span class="chip" data-v="タッチアップ">タッチアップ</span>
+          <span class="chip" data-v="第二リード">第二リード</span>
+          <span class="chip" data-v="帰塁判断">帰塁判断</span>
+        </div>
+        <label>意図・優先順位（タップ順が①②③）</label>
+        <div class="chips" id="ch-off-intent">
+          <span class="chip" data-v="進塁">進塁</span>
+          <span class="chip" data-v="得点">得点</span>
+          <span class="chip" data-v="出塁">出塁</span>
+          <span class="chip" data-v="かく乱">かく乱</span>
+          <span class="chip" data-v="時間稼ぎ">時間稼ぎ</span>
+        </div>
+      </div>
+      <div id="grp-def" class="hide">
+        <label>STEP3 何をした / 何を狙った</label>
+        <div class="chips" id="ch-def-play">
+          <span class="chip" data-v="守備位置選択">守備位置選択</span>
+          <span class="chip" data-v="前進守備">前進守備</span>
+          <span class="chip" data-v="後退守備">後退守備</span>
+          <span class="chip" data-v="中間守備">中間守備</span>
+          <span class="chip" data-v="ゲッツー態勢">ゲッツー態勢</span>
+          <span class="chip" data-v="送球判断">送球判断</span>
+          <span class="chip" data-v="中継カット">中継・カット</span>
+          <span class="chip" data-v="バックアップ">バックアップ</span>
+          <span class="chip" data-v="ベースカバー">ベースカバー</span>
+          <span class="chip" data-v="挟殺">挟殺プレー</span>
+          <span class="chip" data-v="牽制">牽制</span>
+          <span class="chip" data-v="連携プレー">連携プレー</span>
+          <span class="chip" data-v="配球">配球</span>
+          <span class="chip" data-v="バント処理">バント処理</span>
+          <span class="chip" data-v="スクイズ対応">スクイズ対応</span>
+          <span class="chip" data-v="タッチプレー">タッチプレー</span>
+        </div>
+        <label>意図・優先順位（タップ順が①②③）</label>
+        <div class="chips" id="ch-def-intent">
+          <span class="chip" data-v="失点阻止">失点阻止</span>
+          <span class="chip" data-v="最小失点">最小失点</span>
+          <span class="chip" data-v="確実にアウト1個">確実にアウト1個</span>
+          <span class="chip" data-v="ゲッツー">ゲッツー</span>
+          <span class="chip" data-v="進塁阻止">進塁阻止</span>
+        </div>
+        <label>関与ポジション（任意・複数選択可）</label>
+        <div class="chips" id="ch-def-pos">
+          <span class="chip" data-v="投">投</span>
+          <span class="chip" data-v="捕">捕</span>
+          <span class="chip" data-v="一">一</span>
+          <span class="chip" data-v="二">二</span>
+          <span class="chip" data-v="三">三</span>
+          <span class="chip" data-v="遊">遊</span>
+          <span class="chip" data-v="左">左</span>
+          <span class="chip" data-v="中">中</span>
+          <span class="chip" data-v="右">右</span>
+        </div>
+        <div id="pos-choices"></div>
+      </div>
+      <button class="btn" id="btn-wiz3-next" style="margin-top:8px">次へ →</button>
+    </div>
+
+    <div id="wiz-4" class="wiz-step hide">
+      <div id="wiz-3-summary" class="wiz-done"></div>
+      <label>STEP4 判断の評価</label>
+      <div class="chips" id="ch-judge">
+        <span class="chip ok" data-v="correct">判断正解</span>
+        <span class="chip warn" data-v="review">要検討</span>
+        <span class="chip ng" data-v="mistake">判断ミス</span>
+      </div>
+      <p class="hint">技術的な成功/失敗ではなく「その選択は正しかったか」</p>
+
+      <label>意図通りだったか</label>
+      <div class="chips" id="ch-outcome">
+        <span class="chip" data-v="意図通り">意図通り</span>
+        <span class="chip" data-v="部分的">部分的</span>
+        <span class="chip" data-v="意図と違った">意図と違った</span>
+      </div>
+
+      <label>なぜその判断をしたか（任意）</label>
+      <textarea id="p-reason" rows="2" placeholder="例) 三塁ランナーが動かないと見て二塁送球した"></textarea>
+
+      <label>次への学び（任意）</label>
+      <textarea id="p-lesson" rows="2" placeholder="例) この場面は三塁ランナー優先。投手カットを基本に"></textarea>
+
+      <label>補足メモ（任意）</label>
+      <textarea id="p-memo" rows="2" placeholder="その他の気づきなど"></textarea>
+
+      <button class="btn" id="btn-add-play" style="margin-top:10px">このプレーを記録</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>このセッションのログ <span class="count-badge" id="log-count">0</span></h2>
+    <div id="log-list"></div>
+  </div>
+</section>
+
+<section id="tab-imp" class="hide">
+  <div class="card">
+    <h2>LINEなどから取り込み</h2>
+    <p class="hint">試合後のLINE会話や練習メモを貼り付けてAIが解析。確認画面で修正して保存できます。</p>
+    <label>貼り付けエリア</label>
+    <textarea id="imp-text" rows="8" placeholder="例: 6回裏0死1塁で盗塁成功。3回表1死1,3塁で盗塁したけど捕手が2塁投げた。田中が3塁から帰ってこれなくて1点献上。あと外野フライで..."></textarea>
+    <button class="btn" id="btn-imp-parse" style="margin-top:8px">AIで解析</button>
+    <p class="hint">※Gemini APIキーが必要（設定タブで登録）</p>
+  </div>
+
+  <div class="card hide" id="imp-result-card">
+    <h2>解析結果 - 確認・修正</h2>
+    <p class="hint">各プレーを確認して、必要に応じて編集してください。OKなら現在のセッションに追加されます。</p>
+    <div id="imp-results"></div>
+    <div class="row" style="margin-top:12px">
+      <button class="btn" id="btn-imp-save">現在のセッションに追加</button>
+      <button class="btn sub" id="btn-imp-cancel">キャンセル</button>
+    </div>
+  </div>
+</section>
+
+<section id="tab-theme" class="hide">
+  <div class="card">
+    <h2>🎯 年間テーマ</h2>
+    <div id="theme-year-view"></div>
+    <div id="theme-year-form" class="hide" style="margin-top:8px">
+      <input type="text" id="ty-title" placeholder="例: 走塁でプレッシャーをかけるチームになる">
+      <label>目的・ビジョン</label>
+      <textarea id="ty-purpose" placeholder="例: 全員が状況判断できるチームへ。走塁で相手にミスを誘う"></textarea>
+      <label>期間</label>
+      <div class="row">
+        <input type="month" id="ty-from">
+        <input type="month" id="ty-to">
+      </div>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="btn-ty-save">保存</button>
+        <button class="btn sub" id="btn-ty-cancel">キャンセル</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📅 月間テーマ</h2>
+    <div id="theme-month-list"></div>
+    <button class="btn sub" id="btn-tm-add" style="margin-top:8px">＋ 月間テーマを追加</button>
+    <div id="theme-month-form" class="hide" style="margin-top:8px">
+      <label>対象月</label>
+      <input type="month" id="tm-month">
+      <label>テーマ</label>
+      <input type="text" id="tm-title" placeholder="例: 1,3塁の判断を全員で統一する">
+      <label>目的</label>
+      <textarea id="tm-purpose" placeholder="例: 守備全ポジションが1,3塁の盗塁対応を理解する"></textarea>
+      <label>重点項目</label>
+      <textarea id="tm-focus" placeholder="例: ①捕手の判断基準 ②二塁手の体勢 ③投手のカット判断"></textarea>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="btn-tm-save">保存</button>
+        <button class="btn sub" id="btn-tm-cancel">キャンセル</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📋 振り返り・成果ログ</h2>
+    <p class="hint">月間テーマに対する気づきや成果を記録。新メンバーが過去を振り返れるように。</p>
+    <div id="theme-log-list"></div>
+    <button class="btn sub" id="btn-tl-add" style="margin-top:8px">＋ 振り返りを追加</button>
+    <div id="theme-log-form" class="hide" style="margin-top:8px">
+      <label>対象月</label>
+      <select id="tl-month"></select>
+      <label>区分</label>
+      <div class="chips" id="ch-tl-type">
+        <span class="chip on" data-v="成果">成果</span>
+        <span class="chip" data-v="課題">課題</span>
+        <span class="chip" data-v="気づき">気づき</span>
+        <span class="chip" data-v="方針変更">方針変更</span>
+      </div>
+      <label>内容</label>
+      <textarea id="tl-body" placeholder="例: 捕手の判断基準がチーム内で統一できた。ミスが3件→0件に"></textarea>
+      <div class="row" style="margin-top:8px">
+        <button class="btn" id="btn-tl-save">保存</button>
+        <button class="btn sub" id="btn-tl-cancel">キャンセル</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <button class="btn sub" id="btn-theme-copy">テーマ全体をコピー（共有用）</button>
+  </div>
+</section>
+
+<section id="tab-hist" class="hide">
+  <div class="card">
+    <h2>セッション履歴</h2>
+    <label>絞り込み（場所）</label>
+    <input type="text" id="filter-place" placeholder="空欄で全て">
+    <div id="sess-list" style="margin-top:10px"></div>
+  </div>
+</section>
+
+<section id="tab-sum" class="hide">
+  <div class="card">
+    <h2>判断まとめ - チーム共有用</h2>
+    <p class="hint">現在のセッションの判断ログから、チームとしての考え方・改善策をまとめます</p>
+    <div class="row" style="margin-top:8px">
+      <button class="btn" id="btn-sum-ai">AIでまとめる</button>
+      <button class="btn sub" id="btn-sum-rule">集計のみ</button>
+    </div>
+    <div id="sum-out" class="summary hide" style="margin-top:12px"></div>
+    <div class="row hide" id="share-row" style="margin-top:10px">
+      <button class="btn sub" id="btn-share-line">LINEで共有</button>
+      <button class="btn sub" id="btn-copy-sum">コピー</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>📖 チームルール - 判断の辞典</h2>
+    <p class="hint">練習・試合から学んだ「この状況ではこう判断する」をチームの辞典として管理します</p>
+
+    <label>絞り込み</label>
+    <div class="chips" id="ch-rule-filter">
+      <span class="chip on" data-v="all">すべて</span>
+      <span class="chip" data-v="off">攻撃</span>
+      <span class="chip" data-v="def">守備</span>
+    </div>
+
+    <div id="rule-list" style="margin-top:10px"></div>
+
+    <button class="btn sub" id="btn-rule-add" style="margin-top:8px">＋ ルールを追加</button>
+    <button class="btn sub" id="btn-rule-ai" style="margin-top:6px">AIで記録からルール候補を提案</button>
+
+    <div id="rule-form" class="hide" style="margin-top:10px">
+      <label>タイトル</label>
+      <input type="text" id="r-title" placeholder="例: 1死1,3塁の盗塁時（守備）">
+      <label>カテゴリ</label>
+      <div class="seg" id="seg-rule-cat">
+        <button data-cat="off" class="on">攻撃</button>
+        <button data-cat="def">守備</button>
+      </div>
+      <label>状況</label>
+      <input type="text" id="r-situation" placeholder="例: 1死1,3塁 / 2死満塁">
+      <label>判断基準（何を見て判断するか）</label>
+      <textarea id="r-criteria" placeholder="例: 捕手はまず三塁ランナーの動きを確認。飛び出していれば三塁送球、動かなければ二塁送球。"></textarea>
+      <label>優先順位（何を最優先するか）</label>
+      <textarea id="r-priority" placeholder="例: ①三塁ランナーの生還阻止 ②一塁ランナーのアウト ③進塁阻止"></textarea>
+      <label>補足メモ（任意）</label>
+      <textarea id="r-note" placeholder="例: 2点差以上リードなら二塁送球を優先でもOK"></textarea>
+      <div class="row" style="margin-top:10px">
+        <button class="btn" id="btn-rule-save">保存</button>
+        <button class="btn sub" id="btn-rule-cancel">キャンセル</button>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:10px">
+      <button class="btn sub" id="btn-rule-share">ルールをまとめてコピー</button>
+    </div>
+  </div>
+</section>
+
+<section id="tab-set" class="hide">
+  <div class="card">
+    <h2>Gemini API キー（任意）</h2>
+    <p class="hint">設定するとAI判断まとめが利用できます。未設定でも集計機能は動作します。</p>
+    <input type="password" id="api-key" placeholder="AIza..." style="margin-top:8px">
+    <div class="row" style="margin-top:8px">
+      <button class="btn" id="btn-save-key">保存</button>
+      <button class="btn sub" id="btn-clear-key">削除</button>
+    </div>
+  </div>
+  <div class="card">
+    <h2>データ管理</h2>
+    <p class="hint">ファイル保存が確実。コードはデータが小さい時の簡易バックアップ用</p>
+    <label>📁 ファイルで保存/復元（推奨）</label>
+    <button class="btn sub" id="btn-export">JSONエクスポート</button>
+    <label>JSONインポート</label>
+    <input type="file" id="file-import" accept="application/json">
+    <hr>
+    <label>📝 コードで保存/復元（補助）</label>
+    <button class="btn sub" id="btn-code-out">コードで出力</button>
+    <div id="code-out-area" class="hide" style="margin-top:8px">
+      <div id="code-size-info" class="hint" style="margin-bottom:4px"></div>
+      <textarea id="code-out" readonly rows="4" style="font-size:11px;font-family:monospace"></textarea>
+      <button class="btn sub" id="btn-code-copy" style="margin-top:6px">コピー</button>
+    </div>
+    <label>コードから復元</label>
+    <textarea id="code-in" rows="3" style="font-size:11px;font-family:monospace" placeholder="バックアップコードを貼り付け"></textarea>
+    <button class="btn sub" id="btn-code-import" style="margin-top:6px">コードから復元</button>
+    <hr>
+    <button class="btn sub" id="btn-reset" style="background:#ffebee;color:#c62828;border-color:#ffcdd2">全データ削除</button>
+  </div>
+  <div class="card">
+    <h2>このアプリについて</h2>
+    <p class="hint">
+      プレーブック v3.4<br>
+      - チーム判断辞典 -<br>
+      練習も試合も、失敗も成功も、チーム全員の判断を蓄積する<br>
+      単一HTML・ローカル保存・PWA対応<br>
+      Sakai Homies 向けに設計
+    </p>
+  </div>
+</section>
+
+</main>
+
+<div class="toast" id="toast"></div>
+
+<div id="end-modal" class="modal hide">
+  <div class="modal-inner">
+    <div class="modal-title">🎯 お疲れさまでした！</div>
+    <div class="modal-sub" id="end-label"></div>
+    <p class="modal-msg"><b id="end-count">0</b>件のプレーを記録しました。<br>
+    データを守るためバックアップファイルを保存しますか？</p>
+    <button class="btn" id="btn-end-save">バックアップして終了</button>
+    <button class="btn sub" id="btn-end-skip" style="margin-top:8px">保存せず終了</button>
+    <button class="btn sub" id="btn-end-cancel" style="margin-top:8px">キャンセル</button>
+  </div>
+</div>
+
+<script>
+const STORE='sb_note_v2';
+const OLD_STORE='sb_note_v1';
+const KEY='sb_gemini_key';
+let state={sessions:[],currentId:null};
+let draft={side:null,out:null,run:null,play:null,intents:[],judge:null,outcome:null,posAction:{}};
+
+function load(){
+  try{
+    let s=localStorage.getItem(STORE);
+    if(s){state=JSON.parse(s);}
+    else{
+      const old=localStorage.getItem(OLD_STORE);
+      if(old){
+        const od=JSON.parse(old);
+        if(od.sessions){
+          od.sessions.forEach(sess=>{
+            if(!sess.type)sess.type='practice';
+            (sess.plays||[]).forEach(p=>{
+              p.side='off';p.play=p.res||'通常打撃';p.intent='進塁';
+              p.judge=p.evaluation==='good'?'correct':p.evaluation==='bad'?'mistake':'review';
+              p.result=p.res||'';
+            });
+          });
+          state=od;save();
+        }
+      }
+    }
+  }catch(e){}
+  if(!state.sessions)state.sessions=[];
+  if(!state.rules)state.rules=[];
+  if(!state.yearTheme)state.yearTheme=null;
+  if(!state.monthThemes)state.monthThemes=[];
+  if(!state.themeLogs)state.themeLogs=[];
+  state.sessions.forEach(s=>{if(!s.type)s.type='practice'});
+}
+function save(){localStorage.setItem(STORE,JSON.stringify(state))}
+
+function toast(msg,ms){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('on');
+  setTimeout(()=>t.classList.remove('on'),ms||2200);
+}
+
+function exportJSON(){
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='playbook-'+Date.now()+'.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function showEndModal(){
+  const c=getCurrent();
+  if(!c){toast('セッション未選択');return;}
+  document.getElementById('end-count').textContent=c.plays.length;
+  document.getElementById('end-label').textContent=c.date+' / '+c.place;
+  document.getElementById('end-modal').classList.remove('hide');
+}
+
+document.querySelectorAll('.tabs button').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('.tabs button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    ['rec','imp','theme','hist','sum','set'].forEach(id=>{
+      document.getElementById('tab-'+id).classList.toggle('hide',id!==b.dataset.tab);
+    });
+    if(b.dataset.tab==='hist')renderHist();
+  };
+});
+
+function setupChips(containerId,field){
+  const c=document.getElementById(containerId);
+  c.querySelectorAll('.chip').forEach(ch=>{
+    ch.onclick=()=>{
+      c.querySelectorAll('.chip').forEach(x=>x.classList.remove('on'));
+      ch.classList.add('on');
+      draft[field]=ch.dataset.v;
+    };
+  });
+}
+setupChips('ch-out','out');
+setupChips('ch-run','run');
+setupChips('ch-off-play','play');
+// 意図は複数選択・タップ順で優先順位
+function setupIntentChips(containerId){
+  const c=document.getElementById(containerId);
+  c.querySelectorAll('.chip').forEach(ch=>{
+    ch.onclick=()=>{
+      if(ch.classList.contains('on')){
+        ch.classList.remove('on');
+        ch.removeAttribute('data-order');
+        draft.intents=draft.intents.filter(x=>x!==ch.dataset.v);
+        renumberIntents(containerId);
+      }else{
+        ch.classList.add('on');
+        draft.intents.push(ch.dataset.v);
+        ch.setAttribute('data-order',draft.intents.length);
+      }
+    };
+  });
+}
+function renumberIntents(containerId){
+  let i=1;
+  const c=document.getElementById(containerId);
+  draft.intents.forEach(v=>{
+    const ch=c.querySelector('.chip[data-v="'+v+'"]');
+    if(ch)ch.setAttribute('data-order',i++);
+  });
+}
+setupIntentChips('ch-off-intent');
+setupChips('ch-def-play','play');
+setupIntentChips('ch-def-intent');
+setupChips('ch-judge','judge');
+setupChips('ch-outcome','outcome');
+
+// ポジション別の選択肢定義
+const POS_CHOICES={
+  '投':['カットマン','本塁バックアップ','三塁バックアップ','一塁バックアップ','マウンド戻り','その他'],
+  '捕':['二塁送球','三塁送球','一塁送球','投手カット','本塁待機','送球なし','その他'],
+  '一':['一塁ベース入り','中継','バックアップ','送球受け','その他'],
+  '二':['二塁ベース入り','三塁送球準備','一塁送球準備','中間守備','ゲッツー連携','その他'],
+  '三':['三塁ベース入り','ランナー見張り','前進','ベースカバー','その他'],
+  '遊':['二塁ベース入り','中継カット','三塁ベースカバー','ゲッツー連携','その他'],
+  '左':['バックアップ','前進','中継','本塁送球','三塁送球','その他'],
+  '中':['バックアップ','前進','中継','本塁送球','二塁送球','その他'],
+  '右':['バックアップ','前進','中継','本塁送球','一塁送球','その他']
+};
+
+// 関与ポジションの複数選択
+document.querySelectorAll('#ch-def-pos .chip').forEach(ch=>{
+  ch.onclick=()=>{
+    const pos=ch.dataset.v;
+    ch.classList.toggle('on');
+    if(ch.classList.contains('on')){
+      if(!draft.posAction[pos])draft.posAction[pos]='';
+    }else{
+      delete draft.posAction[pos];
+    }
+    renderPosChoices();
+  };
+});
+
+function renderPosChoices(){
+  const box=document.getElementById('pos-choices');
+  const active=Object.keys(draft.posAction);
+  if(!active.length){box.innerHTML='';return;}
+  box.innerHTML=active.map(pos=>{
+    const choices=POS_CHOICES[pos]||['その他'];
+    const chips=choices.map(c=>
+      '<span class="chip'+(draft.posAction[pos]===c?' on':'')+'" data-pos="'+pos+'" data-c="'+esc(c)+'">'+esc(c)+'</span>'
+    ).join('');
+    return '<div class="pos-block"><div class="pos-label">'+pos+'の判断</div><div class="chips">'+chips+'</div></div>';
+  }).join('');
+  box.querySelectorAll('.chip').forEach(ch=>{
+    ch.onclick=()=>{
+      const pos=ch.dataset.pos;
+      const c=ch.dataset.c;
+      box.querySelectorAll('.chip[data-pos="'+pos+'"]').forEach(x=>x.classList.remove('on'));
+      ch.classList.add('on');
+      draft.posAction[pos]=c;
+    };
+  });
+}
+
+// ウィザード遷移
+function wizShow(step){
+  [1,2,3,4].forEach(n=>document.getElementById('wiz-'+n).classList.toggle('hide',n!==step));
+}
+function wizReset(){
+  wizShow(1);
+  document.querySelectorAll('#play-card .chip').forEach(x=>{x.classList.remove('on');x.removeAttribute('data-order');});
+  document.querySelectorAll('#seg-side button').forEach(x=>x.classList.remove('on'));
+  document.getElementById('p-inning').value='';document.getElementById('p-score').value='';
+  document.getElementById('p-reason').value='';document.getElementById('p-lesson').value='';
+  document.getElementById('p-memo').value='';
+  draft={side:null,out:null,run:null,play:null,intents:[],judge:null,outcome:null,posAction:{}};
+  renderPosChoices();
+}
+
+document.querySelectorAll('#seg-side button').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('#seg-side button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+    draft.side=b.dataset.side;
+    document.getElementById('grp-off').classList.toggle('hide',b.dataset.side!=='off');
+    document.getElementById('grp-def').classList.toggle('hide',b.dataset.side!=='def');
+    ['ch-off-play','ch-off-intent','ch-def-play','ch-def-intent','ch-def-pos'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el)el.querySelectorAll('.chip').forEach(x=>{x.classList.remove('on');x.removeAttribute('data-order');});
+    });
+    draft.play=null;draft.intents=[];draft.posAction={};
+    renderPosChoices();
+    document.getElementById('wiz-1-summary').textContent=(b.dataset.side==='off'?'攻撃側':'守備側');
+    wizShow(2);
+  };
+});
+
+// Step2→3
+document.getElementById('btn-wiz2-next').onclick=()=>{
+  if(draft.out===null||!draft.run){toast('アウトとランナーを選択');return;}
+  document.getElementById('wiz-2-summary').textContent=
+    (draft.side==='off'?'攻撃':'守備')+' / '+draft.out+'死 '+runLabel(draft.run)
+    +(document.getElementById('p-inning').value?' / '+document.getElementById('p-inning').value:'')
+    +(document.getElementById('p-score').value?' / '+document.getElementById('p-score').value:'');
+  wizShow(3);
+};
+
+// Step3→4
+document.getElementById('btn-wiz3-next').onclick=()=>{
+  if(!draft.play||!draft.intents.length){toast('プレー種別と意図を選択');return;}
+  const nums=['①','②','③','④','⑤'];
+  const intentStr=draft.intents.map((v,i)=>(draft.intents.length>1?nums[i]:'')+v).join(' ');
+  document.getElementById('wiz-3-summary').textContent=
+    draft.out+'死 '+runLabel(draft.run)+' / '+draft.play+' ('+intentStr+')';
+  wizShow(4);
+};
+
+// サマリークリックで戻る
+document.getElementById('wiz-1-summary').onclick=()=>{wizReset();};
+document.getElementById('wiz-2-summary').onclick=()=>{wizShow(2);};
+document.getElementById('wiz-3-summary').onclick=()=>{wizShow(3);};
+
+document.getElementById('btn-new-sess').onclick=()=>{
+  document.getElementById('sess-form').classList.remove('hide');
+  const d=new Date();
+  document.getElementById('s-date').value=
+    d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+};
+document.getElementById('s-cancel').onclick=()=>{
+  document.getElementById('sess-form').classList.add('hide');
+};
+document.getElementById('s-save').onclick=()=>{
+  const sess={
+    id:'s'+Date.now(),
+    date:document.getElementById('s-date').value||'',
+    place:document.getElementById('s-place').value||'未設定',
+    type:document.querySelector('#seg-type button.on').dataset.type,
+    kind:document.getElementById('s-kind').value,
+    note:document.getElementById('s-note').value||'',
+    plays:[],summary:''
+  };
+  state.sessions.unshift(sess);
+  state.currentId=sess.id;
+  save();
+  document.getElementById('sess-form').classList.add('hide');
+  document.getElementById('s-place').value='';
+  document.getElementById('s-note').value='';
+  renderCurrent();
+  toast('セッション作成');
+};
+
+document.querySelectorAll('#seg-type button').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('#seg-type button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+  };
+});
+
+function getCurrent(){return state.sessions.find(s=>s.id===state.currentId)}
+
+function renderCurrent(){
+  const c=getCurrent();
+  const box=document.getElementById('sess-current');
+  if(!c){
+    box.innerHTML='<p class="hint">セッションを作成してください</p>';
+    document.getElementById('play-card').style.opacity='.4';
+    document.getElementById('play-card').style.pointerEvents='none';
+    return;
+  }
+  const typeBadge=c.type==='game'?'<span class="type-badge game">試合</span>':'<span class="type-badge practice">練習</span>';
+  box.innerHTML='<div class="session-card active"><div class="t">'+esc(c.date)+' / '+esc(c.place)+typeBadge+'</div><div class="s">'+esc(c.kind)+(c.note?' - '+esc(c.note):'')+'</div></div>';
+  document.getElementById('play-card').style.opacity='1';
+  document.getElementById('play-card').style.pointerEvents='auto';
+  renderLog();
+}
+
+function renderLog(){
+  const c=getCurrent();
+  const box=document.getElementById('log-list');
+  const cnt=document.getElementById('log-count');
+  if(!c){box.innerHTML='';cnt.textContent='0';return;}
+  cnt.textContent=c.plays.length;
+  if(!c.plays.length){box.innerHTML='<p class="hint">まだ記録がありません</p>';return;}
+  box.innerHTML=c.plays.slice().reverse().map((p,i)=>{
+    const realIdx=c.plays.length-1-i;
+    const jCls=p.judge==='correct'?'ok':p.judge==='mistake'?'ng':'warn';
+    const jLbl=p.judge==='correct'?'判断○':p.judge==='mistake'?'判断×':'要検討';
+    const sideCls=p.side==='off'?'off':'def';
+    const sideLbl=p.side==='off'?'攻':'守';
+    const posStr=p.posAction&&Object.keys(p.posAction).length
+      ? '<div class="body"><b>関与:</b> '+Object.entries(p.posAction).map(([k,v])=>esc(k)+(v?'='+esc(v):'')).join(' / ')+'</div>'
+      : '';
+    const nums=['①','②','③','④','⑤'];
+    const intentArr=p.intents||[p.intent].filter(Boolean);
+    const intentStr=intentArr.length?intentArr.map((v,j)=>(intentArr.length>1?nums[j]:'')+esc(v)).join(' '):'—';
+    const outcomeStr=p.outcome?'<span class="tag">'+esc(p.outcome)+'</span>':'';
+    const reasonStr=p.reason?'<div class="body"><b>③理由:</b> '+esc(p.reason)+'</div>':'';
+    const lessonStr=p.lesson?'<div class="body"><b>④学び:</b> '+esc(p.lesson)+'</div>':'';
+    return '<div class="log '+jCls+'"><span class="x" data-i="'+realIdx+'">削除</span><div class="meta">'+esc(p.out)+'死 '+esc(runLabel(p.run))+(p.inning?' / '+esc(p.inning):'')+(p.score?' / '+esc(p.score):'')+'</div><span class="tag '+sideCls+'">'+sideLbl+'</span><span class="tag">'+esc(p.play||'-')+'</span><span class="tag">意図:'+intentStr+'</span><span class="tag '+jCls+'">'+jLbl+'</span>'+outcomeStr+posStr+reasonStr+lessonStr+(p.memo?'<div class="body">'+esc(p.memo)+'</div>':'')+'</div>';
+  }).join('');
+  box.querySelectorAll('.x').forEach(x=>{
+    x.onclick=()=>{
+      c.plays.splice(parseInt(x.dataset.i),1);
+      save();renderLog();toast('削除しました');
+    };
+  });
+}
+
+function runLabel(r){
+  const m={'---':'走者なし','1--':'1塁','-2-':'2塁','--3':'3塁',
+    '12-':'1,2塁','1-3':'1,3塁','-23':'2,3塁','123':'満塁'};
+  return m[r]||r||'-';
+}
+function esc(s){return String(s==null?'':s).replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]))}
+
+document.getElementById('btn-add-play').onclick=()=>{
+  const c=getCurrent();
+  if(!c){toast('先にセッション作成');return;}
+  if(!draft.side){toast('攻撃/守備を選択');return;}
+  if(draft.out===null||!draft.run){toast('アウト・ランナーを選択');return;}
+  if(!draft.play||!draft.intents.length){toast('プレー種別と意図を選択');return;}
+  if(!draft.judge){toast('判断の評価を選択');return;}
+  c.plays.push({
+    side:draft.side,out:draft.out,run:draft.run,
+    play:draft.play,intent:draft.intents[0]||'',intents:draft.intents.slice(),
+    judge:draft.judge,outcome:draft.outcome||'',
+    reason:document.getElementById('p-reason').value||'',
+    lesson:document.getElementById('p-lesson').value||'',
+    inning:document.getElementById('p-inning').value||'',
+    score:document.getElementById('p-score').value||'',
+    memo:document.getElementById('p-memo').value||'',
+    posAction:draft.side==='def'?Object.assign({},draft.posAction):{},
+    t:Date.now()
+  });
+  save();
+  document.querySelectorAll('#play-card .chip').forEach(x=>x.classList.remove('on'));
+  wizReset();
+  renderLog();
+  toast('記録しました');
+};
+
+function renderHist(){
+  const box=document.getElementById('sess-list');
+  const f=document.getElementById('filter-place').value.toLowerCase();
+  const list=state.sessions.filter(s=>!f||s.place.toLowerCase().includes(f));
+  if(!list.length){box.innerHTML='<p class="hint">該当なし</p>';return;}
+  box.innerHTML=list.map(s=>{
+    const tb=s.type==='game'?'<span class="type-badge game">試合</span>':'<span class="type-badge practice">練習</span>';
+    return '<div class="session-card '+(s.id===state.currentId?'active':'')+'" data-id="'+s.id+'"><div class="t">'+esc(s.date)+' / '+esc(s.place)+tb+'</div><div class="s">'+esc(s.kind)+' - '+(s.plays||[]).length+'件'+(s.note?' - '+esc(s.note):'')+'</div></div>';
+  }).join('');
+  box.querySelectorAll('.session-card').forEach(el=>{
+    el.onclick=()=>{
+      state.currentId=el.dataset.id;save();
+      toast('選択しました');
+      document.querySelector('.tabs button[data-tab="rec"]').click();
+      renderCurrent();
+    };
+  });
+}
+document.getElementById('filter-place').oninput=renderHist;
+
+function ruleSummary(c){
+  if(!c||!c.plays.length)return 'プレー記録がありません';
+  const p=c.plays;
+  const off=p.filter(x=>x.side==='off');
+  const def=p.filter(x=>x.side==='def');
+  const cor=p.filter(x=>x.judge==='correct').length;
+  const rev=p.filter(x=>x.judge==='review').length;
+  const mis=p.filter(x=>x.judge==='mistake').length;
+  const rate=p.length?Math.round(cor*100/p.length):0;
+
+  let out='■ '+c.date+' / '+c.place+' ['+(c.type==='game'?'試合':'練習')+']\n'+c.kind+(c.note?' - '+c.note:'')+'\n\n';
+  const growth=rev+mis;
+  out+='【成長の数】 '+growth+' (要検討'+rev+'/学び'+mis+') / 正解'+cor+'\n';
+  out+='攻撃:'+off.length+'件  守備:'+def.length+'件\n\n';
+
+  const offMis=off.filter(x=>x.judge!=='correct');
+  if(offMis.length){
+    out+='【攻撃側の学びどころ】\n';
+    const byPlay={};
+    offMis.forEach(x=>byPlay[x.play]=(byPlay[x.play]||0)+1);
+    Object.entries(byPlay).sort((a,b)=>b[1]-a[1]).forEach(([k,v])=>out+=' ・'+k+': '+v+'件\n');
+    out+='\n';
+  }
+  const defMis=def.filter(x=>x.judge!=='correct');
+  if(defMis.length){
+    out+='【守備側の学びどころ】\n';
+    const byPlay={};
+    defMis.forEach(x=>byPlay[x.play]=(byPlay[x.play]||0)+1);
+    Object.entries(byPlay).sort((a,b)=>b[1]-a[1]).forEach(([k,v])=>out+=' ・'+k+': '+v+'件\n');
+    out+='\n';
+  }
+
+  const fmtPos=(x)=>{
+    if(!x.posAction||!Object.keys(x.posAction).length)return '';
+    return '   [関与] '+Object.entries(x.posAction).map(([k,v])=>k+(v?'='+v:'')).join(' / ')+'\n';
+  };
+
+  const ok=p.filter(x=>x.judge==='correct');
+  if(ok.length){
+    out+='【良い判断 - 継続したい型】\n';
+    ok.forEach(x=>{
+      out+=' ・['+(x.side==='off'?'攻':'守')+'] '+x.out+'死'+runLabel(x.run)+' '+x.play+'('+(x.intents||[x.intent]).filter(Boolean).map((v,j,a)=>(a.length>1?['①','②','③','④','⑤'][j]:'')+v).join(' ')+')\n';
+      out+=fmtPos(x);
+      if(x.reason)out+='   理由: '+x.reason+'\n';
+      if(x.outcome)out+='   結果: '+x.outcome+'\n';
+      if(x.lesson)out+='   学び: '+x.lesson+'\n';
+      if(x.memo)out+='   補足: '+x.memo+'\n';
+    });
+    out+='\n';
+  }
+
+  const ng=p.filter(x=>x.judge==='mistake');
+  if(ng.length){
+    out+='【学びの判断 - 失敗から成長する】\n';
+    ng.forEach(x=>{
+      out+=' ・['+(x.side==='off'?'攻':'守')+'] '+x.out+'死'+runLabel(x.run)+' '+x.play+'('+(x.intents||[x.intent]).filter(Boolean).map((v,j,a)=>(a.length>1?['①','②','③','④','⑤'][j]:'')+v).join(' ')+')\n';
+      out+=fmtPos(x);
+      if(x.reason)out+='   理由: '+x.reason+'\n';
+      if(x.outcome)out+='   結果: '+x.outcome+'\n';
+      if(x.lesson)out+='   学び: '+x.lesson+'\n';
+      if(x.memo)out+='   補足: '+x.memo+'\n';
+    });
+    out+='\n';
+  }
+
+  const rv=p.filter(x=>x.judge==='review');
+  if(rv.length){
+    out+='【要検討 - チームで話し合う場面】\n';
+    rv.forEach(x=>{
+      out+=' ・['+(x.side==='off'?'攻':'守')+'] '+x.out+'死'+runLabel(x.run)+' '+x.play+'('+(x.intents||[x.intent]).filter(Boolean).map((v,j,a)=>(a.length>1?['①','②','③','④','⑤'][j]:'')+v).join(' ')+')\n';
+      out+=fmtPos(x);
+      if(x.reason)out+='   理由: '+x.reason+'\n';
+      if(x.outcome)out+='   結果: '+x.outcome+'\n';
+      if(x.lesson)out+='   学び: '+x.lesson+'\n';
+      if(x.memo)out+='   補足: '+x.memo+'\n';
+    });
+    out+='\n';
+  }
+
+  out+='【全体コメント】\n';
+  if(p.length<=2){
+    if(growth>0)out+=' ・1つの場面を深掘りしてチームで辞典化しよう。\n';
+    else out+=' ・良い判断を言語化して、型として共有しよう。\n';
+  }else if(rate>=70){
+    out+=' ・判断の軸がそろってきている。場面のバリエーションを増やそう。\n';
+  }else if(rate>=40){
+    out+=' ・判断が割れる場面あり。チームで考え方を統一しよう。\n';
+  }else{
+    out+=' ・学びの宝庫。失敗の背景を共有して次に活かそう。\n';
+  }
+  if(off.length&&defMis.length>off.length)out+=' ・守備の判断課題が多い。連携確認を優先。\n';
+  if(def.length&&offMis.length>def.length)out+=' ・攻撃の判断課題が多い。サイン・意図の共有を。\n';
+
+  return out;
+}
+
+async function aiSummary(c){
+  const key=localStorage.getItem(KEY);
+  if(!key){toast('APIキー未設定 - 集計のみ表示');return ruleSummary(c);}
+  if(!c||!c.plays.length)return 'プレー記録がありません';
+  const plays=c.plays.map((p,i)=>{
+    const posStr=p.posAction&&Object.keys(p.posAction).length
+      ? '\n   関与ポジション: '+Object.entries(p.posAction).map(([k,v])=>k+(v?'='+v:'')).join(' / ')
+      : '';
+    return (i+1)+'. ['+(p.side==='off'?'攻':'守')+'] '+p.out+'死'+runLabel(p.run)+(p.inning?' '+p.inning:'')+(p.score?' '+p.score:'')+' / '+p.play+'(意図:'+(p.intents||[p.intent]).filter(Boolean).join('→')+') / 判断:'+(p.judge==='correct'?'正解':p.judge==='mistake'?'ミス':'要検討')+(p.result?' / 結果:'+p.result:'')+posStr+(p.memo?'\n   メモ: '+p.memo:'');
+  }).join('\n');
+  const prompt='あなたはソフトボールの指導者です。以下の記録はプレーの技術的結果ではなく「状況判断」を評価したものです。これは練習または試合で生じた場面を、チームで共有する「判断の辞典」に蓄積するためのデータです。\n\n重視する価値観:\n- 攻撃側: 前の塁へ進むこと、得点を最大化すること\n- 守備側: 失点を阻止すること、最小失点に抑えること\n- ファインプレーより状況判断の正しさ\n- 失敗の数が成長の数。悪い判断こそチームで共有すべき財産\n- 守備の連携は「関与ポジション」ごとの役割を明確にして共有することで再現可能になる\n\n以下のログから、チーム全体で共有すべき内容を日本語でまとめてください。\n\n必須で含めること:\n1. 【良い判断】- 継続・水平展開すべき成功例\n2. 【失敗から学ぶ判断】- 悪い判断を責めずに、なぜミスだったか・正解は何だったか・次どうするかを具体的に。失敗は隠さず全件取り上げる\n3. 【要検討の場面】- チーム全員で意見を出し合うべき微妙な判断。守備の場合は各ポジションの役割に触れる\n4. 【次回の事前準備】- 具体的にやるべきこと\n\nスタイル:\n- チーム向けの前向きな共有メッセージ\n- 失敗を取り上げる際も責める表現は避け「次にどう活かすか」に焦点\n- 守備の場面は関与ポジションがあればそれぞれの動きに言及\n- 箇条書き中心・具体的に・600字程度\n\n日付: '+c.date+' / 場所: '+c.place+' / 区分: '+(c.type==='game'?'試合':'練習')+' / '+c.kind+(c.note?' / '+c.note:'')+'\n\nプレー記録:\n'+plays;
+  try{
+    const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+encodeURIComponent(key),{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
+    });
+    const d=await r.json();
+    if(d.error)return 'APIエラー: '+d.error.message+'\n\n'+ruleSummary(c);
+    const txt=d.candidates&&d.candidates[0]&&d.candidates[0].content.parts[0].text;
+    return (txt||'応答なし')+'\n\n---\n'+ruleSummary(c);
+  }catch(e){
+    return '通信エラー: '+e.message+'\n\n'+ruleSummary(c);
+  }
+}
+
+document.getElementById('btn-sum-rule').onclick=()=>{
+  const c=getCurrent();
+  if(!c){toast('セッション未選択');return;}
+  const out=ruleSummary(c);
+  c.summary=out;save();
+  const el=document.getElementById('sum-out');
+  el.classList.remove('hide');el.textContent=out;
+  document.getElementById('share-row').classList.remove('hide');
+};
+document.getElementById('btn-sum-ai').onclick=async()=>{
+  const c=getCurrent();
+  if(!c){toast('セッション未選択');return;}
+  const el=document.getElementById('sum-out');
+  el.classList.remove('hide');el.textContent='生成中...';
+  document.getElementById('share-row').classList.remove('hide');
+  const out=await aiSummary(c);
+  c.summary=out;save();
+  el.textContent=out;
+};
+document.getElementById('btn-share-line').onclick=()=>{
+  const t=document.getElementById('sum-out').textContent;
+  if(!t){toast('まとめを生成してください');return;}
+  location.href='https://line.me/R/msg/text/?'+encodeURIComponent(t);
+};
+document.getElementById('btn-copy-sum').onclick=()=>{
+  const t=document.getElementById('sum-out').textContent;
+  if(!t){toast('まとめを生成してください');return;}
+  navigator.clipboard.writeText(t).then(()=>toast('コピーしました'));
+};
+
+document.getElementById('btn-save-key').onclick=()=>{
+  const k=document.getElementById('api-key').value.trim();
+  if(!k){toast('キーを入力');return;}
+  localStorage.setItem(KEY,k);toast('保存しました');
+};
+document.getElementById('btn-clear-key').onclick=()=>{
+  localStorage.removeItem(KEY);
+  document.getElementById('api-key').value='';
+  toast('削除しました');
+};
+document.getElementById('btn-export').onclick=()=>{
+  exportJSON();
+  toast('出力しました');
+};
+
+document.getElementById('btn-end-sess').onclick=showEndModal;
+document.getElementById('btn-end-save').onclick=()=>{
+  exportJSON();
+  document.getElementById('end-modal').classList.add('hide');
+  state.currentId=null;save();renderCurrent();
+  toast('保存して終了しました',2800);
+};
+document.getElementById('btn-end-skip').onclick=()=>{
+  document.getElementById('end-modal').classList.add('hide');
+  state.currentId=null;save();renderCurrent();
+  toast('セッションを終了しました');
+};
+document.getElementById('btn-end-cancel').onclick=()=>{
+  document.getElementById('end-modal').classList.add('hide');
+};
+
+// チームルール管理
+let ruleFilter='all';
+let editingRuleId=null;
+
+document.querySelectorAll('#ch-rule-filter .chip').forEach(ch=>{
+  ch.onclick=()=>{
+    document.querySelectorAll('#ch-rule-filter .chip').forEach(x=>x.classList.remove('on'));
+    ch.classList.add('on');
+    ruleFilter=ch.dataset.v;
+    renderRules();
+  };
+});
+
+document.querySelectorAll('#seg-rule-cat button').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('#seg-rule-cat button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
+  };
+});
+
+document.getElementById('btn-rule-add').onclick=()=>{
+  editingRuleId=null;
+  document.getElementById('rule-form').classList.remove('hide');
+  document.getElementById('r-title').value='';
+  document.getElementById('r-situation').value='';
+  document.getElementById('r-criteria').value='';
+  document.getElementById('r-priority').value='';
+  document.getElementById('r-note').value='';
+  document.querySelectorAll('#seg-rule-cat button').forEach(x=>x.classList.remove('on'));
+  document.querySelector('#seg-rule-cat button[data-cat="off"]').classList.add('on');
+};
+
+document.getElementById('btn-rule-cancel').onclick=()=>{
+  document.getElementById('rule-form').classList.add('hide');
+  editingRuleId=null;
+};
+
+document.getElementById('btn-rule-save').onclick=()=>{
+  const title=document.getElementById('r-title').value.trim();
+  if(!title){toast('タイトルを入力');return;}
+  const cat=document.querySelector('#seg-rule-cat button.on').dataset.cat;
+  const rule={
+    id:editingRuleId||'r'+Date.now(),
+    title:title,
+    cat:cat,
+    situation:document.getElementById('r-situation').value.trim(),
+    criteria:document.getElementById('r-criteria').value.trim(),
+    priority:document.getElementById('r-priority').value.trim(),
+    note:document.getElementById('r-note').value.trim(),
+    t:Date.now()
+  };
+  if(editingRuleId){
+    const idx=state.rules.findIndex(r=>r.id===editingRuleId);
+    if(idx>=0)state.rules[idx]=rule;
+  }else{
+    state.rules.push(rule);
+  }
+  save();
+  document.getElementById('rule-form').classList.add('hide');
+  editingRuleId=null;
+  renderRules();
+  toast(editingRuleId?'更新しました':'ルールを追加しました');
+};
+
+function renderRules(){
+  const box=document.getElementById('rule-list');
+  const list=state.rules.filter(r=>ruleFilter==='all'||r.cat===ruleFilter);
+  if(!list.length){box.innerHTML='<p class="hint">ルールはまだありません。練習・試合の記録から学びをルール化しましょう。</p>';return;}
+  box.innerHTML=list.map(r=>{
+    return '<div class="rule-card" data-id="'+r.id+'">'+
+      '<span class="rule-cat '+(r.cat==='off'?'off':'def')+'">'+(r.cat==='off'?'攻撃':'守備')+'</span>'+
+      '<div class="rule-title">'+esc(r.title)+'</div>'+
+      (r.situation?'<div class="rule-sit">状況: '+esc(r.situation)+'</div>':'')+
+      (r.criteria?'<div class="rule-label">判断基準</div><div class="rule-body">'+esc(r.criteria)+'</div>':'')+
+      (r.priority?'<div class="rule-label">優先順位</div><div class="rule-body">'+esc(r.priority)+'</div>':'')+
+      (r.note?'<div class="rule-label">補足</div><div class="rule-body">'+esc(r.note)+'</div>':'')+
+      '<div class="rule-actions">'+
+        '<button data-act="edit" data-id="'+r.id+'">編集</button>'+
+        '<button class="del" data-act="del" data-id="'+r.id+'">削除</button>'+
+      '</div></div>';
+  }).join('');
+  box.querySelectorAll('button[data-act="edit"]').forEach(b=>{
+    b.onclick=()=>{
+      const r=state.rules.find(x=>x.id===b.dataset.id);
+      if(!r)return;
+      editingRuleId=r.id;
+      document.getElementById('rule-form').classList.remove('hide');
+      document.getElementById('r-title').value=r.title;
+      document.getElementById('r-situation').value=r.situation||'';
+      document.getElementById('r-criteria').value=r.criteria||'';
+      document.getElementById('r-priority').value=r.priority||'';
+      document.getElementById('r-note').value=r.note||'';
+      document.querySelectorAll('#seg-rule-cat button').forEach(x=>x.classList.remove('on'));
+      document.querySelector('#seg-rule-cat button[data-cat="'+r.cat+'"]').classList.add('on');
+    };
+  });
+  box.querySelectorAll('button[data-act="del"]').forEach(b=>{
+    b.onclick=()=>{
+      state.rules=state.rules.filter(x=>x.id!==b.dataset.id);
+      save();renderRules();toast('削除しました');
+    };
+  });
+}
+
+document.getElementById('btn-rule-share').onclick=()=>{
+  if(!state.rules.length){toast('ルールがありません');return;}
+  let out='📖 チームルール（判断の辞典）\n\n';
+  state.rules.forEach((r,i)=>{
+    out+='━━━ '+(i+1)+'. '+r.title+' ['+(r.cat==='off'?'攻撃':'守備')+']\n';
+    if(r.situation)out+='状況: '+r.situation+'\n';
+    if(r.criteria)out+='判断基準: '+r.criteria+'\n';
+    if(r.priority)out+='優先順位: '+r.priority+'\n';
+    if(r.note)out+='補足: '+r.note+'\n';
+    out+='\n';
+  });
+  navigator.clipboard.writeText(out).then(()=>toast('コピーしました'))
+    .catch(()=>toast('コピーに失敗しました'));
+};
+
+document.getElementById('btn-rule-ai').onclick=async()=>{
+  const key=localStorage.getItem(KEY);
+  if(!key){toast('Gemini APIキー未設定');return;}
+  const c=getCurrent();
+  if(!c||!c.plays.length){toast('現在のセッションに記録がありません');return;}
+  const btn=document.getElementById('btn-rule-ai');
+  btn.textContent='提案中...';btn.disabled=true;
+  const plays=c.plays.map((p,i)=>{
+    const posStr=p.posAction&&Object.keys(p.posAction).length
+      ? ' / 関与:'+Object.entries(p.posAction).map(([k,v])=>k+(v?'='+v:'')).join(','):'';
+    return (i+1)+'. ['+(p.side==='off'?'攻':'守')+'] '+p.out+'死'+runLabel(p.run)+' '+p.play+'('+(p.intents||[p.intent]).filter(Boolean).join('→')+') 判断:'+(p.judge==='correct'?'正解':p.judge==='mistake'?'ミス':'要検討')+posStr+(p.memo?' / '+p.memo:'');
+  }).join('\n');
+  const existRules=state.rules.length?'\n\n既存ルール:\n'+state.rules.map(r=>r.title+': '+r.criteria).join('\n'):'';
+  const prompt='あなたはソフトボールの指導者です。以下のプレー記録から、チームのルール（判断の辞典）として定着させるべき内容を提案してください。\n\n既存ルールと重複しないこと。'+existRules+'\n\n以下のJSON配列のみを返してください（説明文不要・コードブロック不要）:\n[\n  {\n    "title": "ルールのタイトル",\n    "cat": "off" または "def",\n    "situation": "どんな状況で適用するか",\n    "criteria": "何を見て判断するか",\n    "priority": "何を優先するか（①②③形式）",\n    "note": "補足情報"\n  }\n]\n\nプレー記録:\n'+plays;
+  try{
+    const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+encodeURIComponent(key),{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
+    });
+    const d=await r.json();
+    if(d.error){toast('APIエラー: '+d.error.message,3000);btn.textContent='AIで記録からルール候補を提案';btn.disabled=false;return;}
+    let txt=d.candidates&&d.candidates[0]&&d.candidates[0].content.parts[0].text||'';
+    txt=txt.replace(/```json\s*|\s*```/g,'').trim();
+    const parsed=JSON.parse(txt);
+    if(!Array.isArray(parsed)||!parsed.length){toast('提案が見つかりませんでした');btn.textContent='AIで記録からルール候補を提案';btn.disabled=false;return;}
+    parsed.forEach(p=>{
+      state.rules.push({
+        id:'r'+Date.now()+Math.random().toString(36).slice(2,6),
+        title:p.title||'無題',cat:p.cat||'off',
+        situation:p.situation||'',criteria:p.criteria||'',
+        priority:p.priority||'',note:p.note||'',t:Date.now()
+      });
+    });
+    save();renderRules();
+    toast(parsed.length+'件のルールを追加しました',2800);
+  }catch(e){
+    toast('エラー: '+e.message,3000);
+  }
+  btn.textContent='AIで記録からルール候補を提案';btn.disabled=false;
+};
+
+renderRules();
+
+// テーマ管理
+let editingTmId=null;
+let tlType='成果';
+
+function renderYearTheme(){
+  const box=document.getElementById('theme-year-view');
+  const y=state.yearTheme;
+  if(!y){
+    box.innerHTML='<p class="hint">年間テーマを設定しましょう</p><button class="btn sub" id="btn-ty-edit">年間テーマを設定</button>';
+    document.getElementById('btn-ty-edit').onclick=()=>document.getElementById('theme-year-form').classList.remove('hide');
+    return;
+  }
+  box.innerHTML='<div class="theme-card"><div class="th-title">'+esc(y.title)+'</div>'+
+    (y.from||y.to?'<div class="th-sub">'+esc(y.from||'')+' 〜 '+esc(y.to||'')+'</div>':'')+
+    (y.purpose?'<div class="th-label">目的・ビジョン</div><div class="th-body">'+esc(y.purpose)+'</div>':'')+
+    '<div class="th-actions"><button id="btn-ty-edit2">編集</button><button class="del" id="btn-ty-del">削除</button></div></div>';
+  document.getElementById('btn-ty-edit2').onclick=()=>{
+    document.getElementById('ty-title').value=y.title||'';
+    document.getElementById('ty-purpose').value=y.purpose||'';
+    document.getElementById('ty-from').value=y.from||'';
+    document.getElementById('ty-to').value=y.to||'';
+    document.getElementById('theme-year-form').classList.remove('hide');
+  };
+  document.getElementById('btn-ty-del').onclick=()=>{
+    state.yearTheme=null;save();renderYearTheme();toast('削除しました');
+  };
+}
+document.getElementById('btn-ty-save').onclick=()=>{
+  const title=document.getElementById('ty-title').value.trim();
+  if(!title){toast('テーマを入力');return;}
+  state.yearTheme={title:title,purpose:document.getElementById('ty-purpose').value.trim(),from:document.getElementById('ty-from').value,to:document.getElementById('ty-to').value};
+  save();document.getElementById('theme-year-form').classList.add('hide');renderYearTheme();toast('保存しました');
+};
+document.getElementById('btn-ty-cancel').onclick=()=>document.getElementById('theme-year-form').classList.add('hide');
+
+function renderMonthThemes(){
+  const box=document.getElementById('theme-month-list');
+  const list=state.monthThemes.slice().sort((a,b)=>b.month.localeCompare(a.month));
+  if(!list.length){box.innerHTML='<p class="hint">月間テーマを追加して、今月の重点を明確にしましょう</p>';return;}
+  box.innerHTML=list.map(m=>{
+    const logs=(state.themeLogs||[]).filter(l=>l.month===m.month);
+    const achC=logs.filter(l=>l.type==='成果').length;
+    const issC=logs.filter(l=>l.type==='課題').length;
+    return '<div class="theme-card" data-id="'+m.id+'"><div class="th-title">'+esc(m.month)+' / '+esc(m.title)+'</div>'+
+      (achC||issC?'<div class="th-sub">成果'+achC+'件 / 課題'+issC+'件</div>':'')+
+      (m.purpose?'<div class="th-label">目的</div><div class="th-body">'+esc(m.purpose)+'</div>':'')+
+      (m.focus?'<div class="th-label">重点項目</div><div class="th-body">'+esc(m.focus)+'</div>':'')+
+      '<div class="th-actions"><button data-act="edit" data-id="'+m.id+'">編集</button><button class="del" data-act="del" data-id="'+m.id+'">削除</button></div></div>';
+  }).join('');
+  box.querySelectorAll('button[data-act="edit"]').forEach(b=>{
+    b.onclick=()=>{
+      const m=state.monthThemes.find(x=>x.id===b.dataset.id);if(!m)return;
+      editingTmId=m.id;
+      document.getElementById('tm-month').value=m.month||'';
+      document.getElementById('tm-title').value=m.title||'';
+      document.getElementById('tm-purpose').value=m.purpose||'';
+      document.getElementById('tm-focus').value=m.focus||'';
+      document.getElementById('theme-month-form').classList.remove('hide');
+    };
+  });
+  box.querySelectorAll('button[data-act="del"]').forEach(b=>{
+    b.onclick=()=>{state.monthThemes=state.monthThemes.filter(x=>x.id!==b.dataset.id);save();renderMonthThemes();toast('削除しました');};
+  });
+}
+document.getElementById('btn-tm-add').onclick=()=>{
+  editingTmId=null;const d=new Date();
+  document.getElementById('tm-month').value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0');
+  document.getElementById('tm-title').value='';document.getElementById('tm-purpose').value='';document.getElementById('tm-focus').value='';
+  document.getElementById('theme-month-form').classList.remove('hide');
+};
+document.getElementById('btn-tm-cancel').onclick=()=>{document.getElementById('theme-month-form').classList.add('hide');editingTmId=null;};
+document.getElementById('btn-tm-save').onclick=()=>{
+  const title=document.getElementById('tm-title').value.trim();if(!title){toast('テーマを入力');return;}
+  const m={id:editingTmId||'tm'+Date.now(),month:document.getElementById('tm-month').value,title:title,purpose:document.getElementById('tm-purpose').value.trim(),focus:document.getElementById('tm-focus').value.trim()};
+  if(editingTmId){const idx=state.monthThemes.findIndex(x=>x.id===editingTmId);if(idx>=0)state.monthThemes[idx]=m;}
+  else state.monthThemes.push(m);
+  save();document.getElementById('theme-month-form').classList.add('hide');editingTmId=null;
+  renderMonthThemes();updateTlMonthSelect();toast('保存しました');
+};
+
+// 振り返りログ
+document.querySelectorAll('#ch-tl-type .chip').forEach(ch=>{
+  ch.onclick=()=>{document.querySelectorAll('#ch-tl-type .chip').forEach(x=>x.classList.remove('on'));ch.classList.add('on');tlType=ch.dataset.v;};
+});
+function updateTlMonthSelect(){
+  const sel=document.getElementById('tl-month');
+  sel.innerHTML=state.monthThemes.slice().sort((a,b)=>b.month.localeCompare(a.month))
+    .map(m=>'<option value="'+m.month+'">'+esc(m.month)+' / '+esc(m.title)+'</option>').join('');
+}
+function renderThemeLogs(){
+  const box=document.getElementById('theme-log-list');
+  const list=(state.themeLogs||[]).slice().sort((a,b)=>b.t-a.t);
+  if(!list.length){box.innerHTML='<p class="hint">月間テーマへの振り返りや成果を記録しましょう</p>';return;}
+  box.innerHTML=list.map(l=>'<div class="theme-card"><span class="th-type '+esc(l.type)+'">'+esc(l.type)+'</span><span class="th-sub">'+esc(l.month)+'</span><div class="th-body" style="margin-top:4px">'+esc(l.body)+'</div><div class="th-actions"><button class="del" data-act="del-tl" data-id="'+l.id+'">削除</button></div></div>').join('');
+  box.querySelectorAll('button[data-act="del-tl"]').forEach(b=>{
+    b.onclick=()=>{state.themeLogs=state.themeLogs.filter(x=>x.id!==b.dataset.id);save();renderThemeLogs();renderMonthThemes();toast('削除しました');};
+  });
+}
+document.getElementById('btn-tl-add').onclick=()=>{
+  if(!state.monthThemes.length){toast('先に月間テーマを作成してください');return;}
+  updateTlMonthSelect();document.getElementById('tl-body').value='';
+  document.querySelectorAll('#ch-tl-type .chip').forEach(x=>x.classList.remove('on'));
+  document.querySelector('#ch-tl-type .chip[data-v="成果"]').classList.add('on');tlType='成果';
+  document.getElementById('theme-log-form').classList.remove('hide');
+};
+document.getElementById('btn-tl-cancel').onclick=()=>document.getElementById('theme-log-form').classList.add('hide');
+document.getElementById('btn-tl-save').onclick=()=>{
+  const body=document.getElementById('tl-body').value.trim();if(!body){toast('内容を入力');return;}
+  state.themeLogs.push({id:'tl'+Date.now(),month:document.getElementById('tl-month').value,type:tlType,body:body,t:Date.now()});
+  save();document.getElementById('theme-log-form').classList.add('hide');renderThemeLogs();renderMonthThemes();toast('記録しました');
+};
+document.getElementById('btn-theme-copy').onclick=()=>{
+  let out='';
+  if(state.yearTheme){const y=state.yearTheme;out+='🎯 年間テーマ: '+y.title+'\n';if(y.purpose)out+='   目的: '+y.purpose+'\n';if(y.from||y.to)out+='   期間: '+y.from+' 〜 '+y.to+'\n';out+='\n';}
+  if(state.monthThemes.length){out+='📅 月間テーマ\n';state.monthThemes.slice().sort((a,b)=>b.month.localeCompare(a.month)).forEach(m=>{out+='━━ '+m.month+' / '+m.title+'\n';if(m.purpose)out+='   目的: '+m.purpose+'\n';if(m.focus)out+='   重点: '+m.focus+'\n';const logs=(state.themeLogs||[]).filter(l=>l.month===m.month);logs.forEach(l=>out+='   ['+l.type+'] '+l.body+'\n');out+='\n';});}
+  if(!out){toast('テーマがありません');return;}
+  navigator.clipboard.writeText(out).then(()=>toast('コピーしました'));
+};
+renderYearTheme();renderMonthThemes();renderThemeLogs();
+
+// コード出力：10KB未満ならBase64で表示、以上なら警告
+document.getElementById('btn-code-out').onclick=()=>{
+  const json=JSON.stringify(state);
+  const b64=btoa(unescape(encodeURIComponent(json)));
+  const sizeKB=Math.round(b64.length/1024*10)/10;
+  const area=document.getElementById('code-out-area');
+  const info=document.getElementById('code-size-info');
+  const ta=document.getElementById('code-out');
+  area.classList.remove('hide');
+  if(b64.length<10240){
+    info.innerHTML='✅ サイズ: <b>'+sizeKB+'KB</b> - コピペOK';
+    info.style.color='var(--ok)';
+    ta.value=b64;
+  }else{
+    info.innerHTML='⚠️ サイズ: <b>'+sizeKB+'KB</b> - 大きすぎるためファイル保存を推奨';
+    info.style.color='var(--ng)';
+    ta.value=b64;
+    toast('コードが長すぎます。ファイル保存推奨',3000);
+  }
+};
+
+document.getElementById('btn-code-copy').onclick=()=>{
+  const ta=document.getElementById('code-out');
+  if(!ta.value){toast('先に出力してください');return;}
+  navigator.clipboard.writeText(ta.value).then(()=>toast('コピーしました'))
+    .catch(()=>{ta.select();document.execCommand('copy');toast('コピーしました');});
+};
+
+document.getElementById('btn-code-import').onclick=()=>{
+  const code=document.getElementById('code-in').value.trim();
+  if(!code){toast('コードを貼り付けてください');return;}
+  try{
+    const json=decodeURIComponent(escape(atob(code)));
+    const d=JSON.parse(json);
+    if(!d.sessions){toast('形式エラー');return;}
+    if(!confirm('現在のデータを上書きします。よろしいですか？'))return;
+    state=d;save();renderCurrent();
+    document.getElementById('code-in').value='';
+    toast('復元しました',2800);
+  }catch(err){
+    toast('復元失敗: コードが不正です',3000);
+  }
+};
+
+// 取り込み機能
+let impBuffer=[];
+
+document.getElementById('btn-imp-parse').onclick=async()=>{
+  const key=localStorage.getItem(KEY);
+  if(!key){toast('Gemini APIキーを設定してください');return;}
+  const text=document.getElementById('imp-text').value.trim();
+  if(!text){toast('文章を貼り付けてください');return;}
+  const btn=document.getElementById('btn-imp-parse');
+  btn.textContent='解析中...';btn.disabled=true;
+  try{
+    const prompt='あなたはソフトボールの場面記述を構造化するアシスタントです。以下の自由文から、プレーごとに分解してJSON配列で返してください。\n\n各プレーは以下の形式:\n{\n  "side": "off" または "def",\n  "out": "0","1","2" のいずれか,\n  "run": "---","1--","-2-","--3","12-","1-3","-23","123" のいずれか（ランナー状況）,\n  "play": プレー種別（通常打撃/進塁打狙い/犠打バント/セーフティ/プッシュバント/スクイズ/セーフティスクイズ/バスター/スラップ/ヒットエンドラン/ランエンドヒット/盗塁/ディレードスチール/ギャンブルスタート/タッチアップ/第二リード/帰塁判断/守備位置選択/前進守備/後退守備/中間守備/ゲッツー態勢/送球判断/中継カット/バックアップ/ベースカバー/挟殺/牽制/連携プレー/配球/バント処理/スクイズ対応/タッチプレー から選ぶ）,\n  "intent": 意図（攻撃なら：進塁/得点/出塁/かく乱/時間稼ぎ、守備なら：失点阻止/最小失点/確実にアウト1個/ゲッツー/進塁阻止）,\n  "judge": "correct"(判断正解) / "review"(要検討) / "mistake"(判断ミス),\n  "inning": イニング情報（例:"6回裏"、不明なら""）,\n  "score": 点差（例:"2点ビハインド"、不明なら""）,\n  "memo": 状況の詳細・背景・次どうするか等の文章（元の情報を保持）,\n  "posAction": 守備の場合の関与ポジションと判断。{"捕":"二塁送球","遊":"二塁ベース入り"} 形式。攻撃や不明なら {}\n}\n\n重要:\n- 不明な情報はデフォルト値（out:"0", run:"---", judge:"review"）で埋める\n- memoには元の文章の該当部分をできるだけ残す\n- 説明文や前置きは書かず、JSON配列のみを返す\n- ```json``` のコードブロックは付けない\n\n解析対象:\n'+text;
+    const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key='+encodeURIComponent(key),{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({contents:[{parts:[{text:prompt}]}]})
+    });
+    const d=await r.json();
+    if(d.error){toast('APIエラー: '+d.error.message,3000);btn.textContent='AIで解析';btn.disabled=false;return;}
+    let txt=d.candidates&&d.candidates[0]&&d.candidates[0].content.parts[0].text||'';
+    // コードブロック除去
+    txt=txt.replace(/```json\s*|\s*```/g,'').trim();
+    let parsed;
+    try{parsed=JSON.parse(txt);}
+    catch(e){toast('JSON解析失敗。もう一度試してください',3000);btn.textContent='AIで解析';btn.disabled=false;return;}
+    if(!Array.isArray(parsed)){toast('解析結果が配列ではありません',3000);btn.textContent='AIで解析';btn.disabled=false;return;}
+    impBuffer=parsed;
+    renderImpResults();
+    document.getElementById('imp-result-card').classList.remove('hide');
+    toast(parsed.length+'件のプレーを解析しました');
+  }catch(e){
+    toast('通信エラー: '+e.message,3000);
+  }
+  btn.textContent='AIで解析';btn.disabled=false;
+};
+
+function renderImpResults(){
+  const box=document.getElementById('imp-results');
+  if(!impBuffer.length){box.innerHTML='<p class="hint">解析結果なし</p>';return;}
+  const playOpts=['通常打撃','進塁打狙い','犠打バント','セーフティ','プッシュバント','スクイズ','セーフティスクイズ','バスター','スラップ','ヒットエンドラン','ランエンドヒット','盗塁','ディレードスチール','ギャンブルスタート','タッチアップ','第二リード','帰塁判断','守備位置選択','前進守備','後退守備','中間守備','ゲッツー態勢','送球判断','中継カット','バックアップ','ベースカバー','挟殺','牽制','連携プレー','配球','バント処理','スクイズ対応','タッチプレー'];
+  const offIntent=['進塁','得点','出塁','かく乱','時間稼ぎ'];
+  const defIntent=['失点阻止','最小失点','確実にアウト1個','ゲッツー','進塁阻止'];
+  const runOpts=[['---','なし'],['1--','1塁'],['-2-','2塁'],['--3','3塁'],['12-','1,2塁'],['1-3','1,3塁'],['-23','2,3塁'],['123','満塁']];
+  box.innerHTML=impBuffer.map((p,i)=>{
+    const intentOpts=p.side==='def'?defIntent:offIntent;
+    const posStr=p.posAction?Object.entries(p.posAction).map(([k,v])=>k+(v?'='+v:'')).join(' / '):'';
+    return '<div class="imp-play" data-i="'+i+'">'+
+      '<span class="imp-num">#'+(i+1)+'</span>'+
+      '<span class="imp-del" data-i="'+i+'">削除</span>'+
+      '<div class="imp-row"><span class="imp-lbl">攻守</span>'+
+        '<select data-f="side"><option value="off"'+(p.side==='off'?' selected':'')+'>攻撃</option><option value="def"'+(p.side==='def'?' selected':'')+'>守備</option></select>'+
+        '<select data-f="out"><option value="0"'+(p.out==='0'?' selected':'')+'>0死</option><option value="1"'+(p.out==='1'?' selected':'')+'>1死</option><option value="2"'+(p.out==='2'?' selected':'')+'>2死</option></select>'+
+        '<select data-f="run">'+runOpts.map(r=>'<option value="'+r[0]+'"'+(p.run===r[0]?' selected':'')+'>'+r[1]+'</option>').join('')+'</select>'+
+      '</div>'+
+      '<div class="imp-row"><span class="imp-lbl">種別</span>'+
+        '<select data-f="play">'+playOpts.map(o=>'<option value="'+esc(o)+'"'+(p.play===o?' selected':'')+'>'+esc(o)+'</option>').join('')+'</select>'+
+        '<select data-f="intent">'+intentOpts.map(o=>'<option value="'+esc(o)+'"'+(p.intent===o?' selected':'')+'>'+esc(o)+'</option>').join('')+'</select>'+
+      '</div>'+
+      '<div class="judge-seg">'+
+        '<button data-j="correct" class="'+(p.judge==='correct'?'on ok':'')+'">判断正解</button>'+
+        '<button data-j="review" class="'+(p.judge==='review'?'on warn':'')+'">要検討</button>'+
+        '<button data-j="mistake" class="'+(p.judge==='mistake'?'on ng':'')+'">判断ミス</button>'+
+      '</div>'+
+      '<div class="imp-row"><input type="text" data-f="inning" placeholder="イニング" value="'+esc(p.inning||'')+'">'+
+        '<input type="text" data-f="score" placeholder="点差" value="'+esc(p.score||'')+'"></div>'+
+      (posStr?'<div class="hint" style="margin:6px 0">関与: '+esc(posStr)+'</div>':'')+
+      '<textarea data-f="memo" class="imp-row" placeholder="メモ">'+esc(p.memo||'')+'</textarea>'+
+    '</div>';
+  }).join('');
+  // イベント設定
+  box.querySelectorAll('.imp-play').forEach(el=>{
+    const idx=parseInt(el.dataset.i);
+    el.querySelectorAll('select,input,textarea').forEach(inp=>{
+      inp.onchange=inp.oninput=()=>{
+        impBuffer[idx][inp.dataset.f]=inp.value;
+        if(inp.dataset.f==='side')renderImpResults(); // side変わったら意図選択肢を更新
+      };
+    });
+    el.querySelectorAll('.judge-seg button').forEach(b=>{
+      b.onclick=()=>{
+        impBuffer[idx].judge=b.dataset.j;
+        renderImpResults();
+      };
+    });
+  });
+  box.querySelectorAll('.imp-del').forEach(x=>{
+    x.onclick=()=>{
+      impBuffer.splice(parseInt(x.dataset.i),1);
+      renderImpResults();
+      if(!impBuffer.length)document.getElementById('imp-result-card').classList.add('hide');
+    };
+  });
+}
+
+document.getElementById('btn-imp-save').onclick=()=>{
+  const c=getCurrent();
+  if(!c){toast('先にセッションを作成してください',3000);return;}
+  if(!impBuffer.length){toast('プレーがありません');return;}
+  const now=Date.now();
+  impBuffer.forEach((p,i)=>{
+    c.plays.push({
+      side:p.side||'off',out:p.out||'0',run:p.run||'---',
+      play:p.play||'通常打撃',intent:p.intent||'進塁',intents:p.intents||[p.intent||'進塁'],
+      judge:p.judge||'review',result:'',
+      inning:p.inning||'',score:p.score||'',memo:p.memo||'',
+      posAction:p.posAction||{},t:now+i
+    });
+  });
+  save();
+  impBuffer=[];
+  document.getElementById('imp-result-card').classList.add('hide');
+  document.getElementById('imp-text').value='';
+  renderLog();
+  toast(c.plays.length+'件のセッションになりました',2800);
+  document.querySelector('.tabs button[data-tab="rec"]').click();
+};
+
+document.getElementById('btn-imp-cancel').onclick=()=>{
+  impBuffer=[];
+  document.getElementById('imp-result-card').classList.add('hide');
+  toast('キャンセルしました');
+};
+document.getElementById('file-import').onchange=(e)=>{
+  const f=e.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const d=JSON.parse(r.result);
+      if(d.sessions){state=d;save();renderCurrent();toast('読み込みました');}
+      else toast('形式エラー');
+    }catch(err){toast('読み込み失敗');}
+  };
+  r.readAsText(f);
+};
+let resetClick=0;
+document.getElementById('btn-reset').onclick=()=>{
+  resetClick++;
+  if(resetClick===1){toast('もう一度押すと全削除');setTimeout(()=>resetClick=0,3000);return;}
+  state={sessions:[],currentId:null};save();renderCurrent();
+  toast('削除しました');resetClick=0;
+};
+
+load();
+const sk=localStorage.getItem(KEY);
+if(sk)document.getElementById('api-key').value=sk;
+// ウィザードはStep1から開始（side自動選択しない）
+renderCurrent();
+</script>
+
+</body>
+</html>
