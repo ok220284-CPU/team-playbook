@@ -573,7 +573,7 @@ hr{border:none;border-top:1px solid var(--line);margin:12px 0}
       <button class="btn sub" id="btn-code-copy" style="margin-top:6px">コピー</button>
     </div>
     <label>コードから復元</label>
-    <textarea id="code-in" rows="3" style="font-size:11px;font-family:monospace" placeholder="バックアップコードを貼り付け"></textarea>
+    <textarea id="code-in" rows="4" style="font-size:11px;font-family:monospace" placeholder="バックアップコード または JSON（{...}）を貼り付け"></textarea>
     <button class="btn sub" id="btn-code-import" style="margin-top:6px">コードから復元</button>
     <hr>
     <button class="btn sub" id="btn-reset" style="background:#ffebee;color:#c62828;border-color:#ffcdd2">全データ削除</button>
@@ -1465,17 +1465,24 @@ document.getElementById('btn-code-copy').onclick=()=>{
 document.getElementById('btn-code-import').onclick=()=>{
   const code=document.getElementById('code-in').value.trim();
   if(!code){toast('コードを貼り付けてください');return;}
-  try{
-    const json=decodeURIComponent(escape(atob(code)));
-    const d=JSON.parse(json);
-    if(!d.sessions){toast('形式エラー');return;}
-    if(!confirm('現在のデータを上書きします。よろしいですか？'))return;
-    state=d;save();renderCurrent();
-    document.getElementById('code-in').value='';
-    toast('復元しました',2800);
-  }catch(err){
-    toast('復元失敗: コードが不正です',3000);
+  let d=null;
+  // 1. 生のJSONとして試す
+  if(code.startsWith('{')||code.startsWith('[')){
+    try{d=JSON.parse(code);}catch(e){}
   }
+  // 2. Base64として試す
+  if(!d){
+    try{
+      const json=decodeURIComponent(escape(atob(code)));
+      d=JSON.parse(json);
+    }catch(e){}
+  }
+  if(!d){toast('復元失敗: コードが不正です',3000);return;}
+  if(!d.sessions){toast('形式エラー: sessions が見当たりません');return;}
+  if(!confirm('現在のデータを上書きします。よろしいですか？'))return;
+  state=d;save();renderCurrent();
+  document.getElementById('code-in').value='';
+  toast('復元しました',2800);
 };
 
 // 取り込み機能
